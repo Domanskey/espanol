@@ -42,6 +42,16 @@ export type Exercise =
       person: number;
       answer: string;
     }
+  | {
+      /** whole conjugation table: all 6 persons of one verb in one tense */
+      kind: 'table';
+      id: string;
+      topic: string;
+      verb: string;
+      en: string;
+      tense: Tense;
+      answers: string[];
+    }
   | { kind: 'fill'; id: string; topic: string; text: string; why?: string; title?: string }
   | {
       kind: 'choice';

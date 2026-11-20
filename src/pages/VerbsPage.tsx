@@ -1,34 +1,43 @@
 import { useState } from 'react';
 import type { Exercise, Tense } from '../types';
-import { conjugate, isIrregular, PERSONS, TENSE_LABEL, VERBS } from '../data/verbs';
-import { conjExercise, shuffle } from '../engine/session';
+import { conjugate, DRILL_VERBS, getVerb, isIrregular, PERSONS, TENSE_LABEL, VERBS } from '../data/verbs';
+import { ALL_TENSES, conjExercise, shuffle, tableExercise, TENSE_TOPIC } from '../engine/session';
+import { getStat } from '../engine/progress';
 import { BackLink } from '../components/common';
 import { Practice } from '../components/Practice';
 
 const TENSES: Tense[] = ['indefinido', 'imperfecto', 'perfecto', 'presente', 'gerundio'];
-const TOPIC_FOR: Record<Tense, string> = {
-  indefinido: 'indefinido',
-  imperfecto: 'imperfecto',
-  perfecto: 'perfecto',
-  presente: 'presente',
-  gerundio: 'gerundio',
-};
+const mastered = (tense: Tense, inf: string, p: number) => (getStat(`c:${tense}:${inf}:${p}`)?.box ?? 0) >= 4;
 
 export function VerbsPage() {
   const [verb, setVerb] = useState('tener');
   const [query, setQuery] = useState('');
   const [tenses, setTenses] = useState<Tense[]>(['indefinido']);
+  const [mode, setMode] = useState<'single' | 'table'>('single');
   const [onlyIrregular, setOnlyIrregular] = useState(false);
+  const [onlyWeak, setOnlyWeak] = useState(true);
   const [vosotros, setVosotros] = useState(true);
   const [count, setCount] = useState(20);
   const [session, setSession] = useState<Exercise[] | null>(null);
 
   const build = () => {
     const persons = vosotros ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 5];
-    const pool = tenses.flatMap((t) =>
-      VERBS.filter((v) => !onlyIrregular || isIrregular(v.inf, t)).flatMap((v) => persons.map((p) => conjExercise(TOPIC_FOR[t], v.inf, t, p))),
-    );
-    return shuffle(pool).slice(0, count);
+    const verbsFor = (t: Tense) => DRILL_VERBS.filter((v) => !onlyIrregular || isIrregular(v, t));
+    let pool: Exercise[];
+    if (mode === 'table') {
+      pool = tenses.flatMap((t) =>
+        verbsFor(t)
+          .filter((v) => !onlyWeak || !persons.every((p) => mastered(t, v, p)))
+          .map((v) => tableExercise(v, t)),
+      );
+    } else {
+      pool = tenses.flatMap((t) =>
+        verbsFor(t).flatMap((v) =>
+          persons.filter((p) => !onlyWeak || !mastered(t, v, p)).map((p) => conjExercise(TENSE_TOPIC[t], v, t, p)),
+        ),
+      );
+    }
+    return shuffle(pool).slice(0, mode === 'table' ? Math.ceil(count / 4) : count);
   };
 
   if (session)
@@ -44,12 +53,18 @@ export function VerbsPage() {
       </div>
     );
 
-  const matches = VERBS.filter((v) => !query || v.inf.includes(query.toLowerCase()) || v.en.includes(query.toLowerCase()));
+  const q = query.toLowerCase();
+  const matches = VERBS.filter((v) => !q || v.inf.includes(q) || v.en.includes(q));
+  const v = getVerb(verb);
+  const covered = ALL_TENSES.reduce((n, t) => n + [0, 1, 2, 3, 4, 5].filter((p) => mastered(t, verb, p)).length, 0);
 
   return (
     <div className="verbs">
       <BackLink />
       <h1>📖 Verbs</h1>
+      <p className="muted">
+        Every verb used on the platform ({DRILL_VERBS.length}) can be drilled in every person and tense.
+      </p>
 
       <div className="card">
         <h2>Custom drill</h2>
@@ -70,6 +85,17 @@ export function VerbsPage() {
             </div>
           </div>
           <div className="row wrap">
+            <label className="chip">
+              <input type="radio" checked={mode === 'single'} onChange={() => setMode('single')} /> Single forms
+            </label>
+            <label className="chip">
+              <input type="radio" checked={mode === 'table'} onChange={() => setMode('table')} /> Whole tables (all persons)
+            </label>
+          </div>
+          <div className="row wrap">
+            <label className="chip">
+              <input type="checkbox" checked={onlyWeak} onChange={() => setOnlyWeak(!onlyWeak)} /> Only forms I haven't mastered
+            </label>
             <label className="chip">
               <input type="checkbox" checked={onlyIrregular} onChange={() => setOnlyIrregular(!onlyIrregular)} /> Only irregular
             </label>
@@ -96,16 +122,24 @@ export function VerbsPage() {
         <div className="verb-picker">
           <input placeholder="Search verb (es / en)…" value={query} onChange={(e) => setQuery(e.target.value)} />
           <div className="verb-list">
-            {matches.map((v) => (
-              <button key={v.inf} className={`chip ${v.inf === verb ? 'selected' : ''}`} onClick={() => setVerb(v.inf)} title={v.en}>
-                {v.inf}
+            {matches.map((m) => (
+              <button key={m.inf} className={`chip ${m.inf === verb ? 'selected' : ''}`} onClick={() => setVerb(m.inf)} title={m.en}>
+                {m.inf}
               </button>
             ))}
           </div>
         </div>
-        <h3>
-          {verb} <span className="muted">({VERBS.find((v) => v.inf === verb)?.en})</span>
-        </h3>
+        <div className="row spread">
+          <h3>
+            {verb} <span className="muted">({v.en})</span>
+          </h3>
+          {!v.impersonal && (
+            <a className="btn primary" href={`#/verb/${encodeURIComponent(verb)}`}>
+              ▶ Drill all forms of {verb}
+            </a>
+          )}
+        </div>
+        {!v.impersonal && <p className="muted small">Mastered forms: {covered} / 30</p>}
         <div className="table-wrap">
           <table className="conj">
             <thead>
@@ -123,15 +157,21 @@ export function VerbsPage() {
               {PERSONS.map((p, i) => (
                 <tr key={p}>
                   <td className="muted">{p}</td>
-                  {TENSES.map((t) => (
-                    <td key={t}>{conjugate(verb, t, i)}</td>
-                  ))}
+                  {TENSES.map((t) => {
+                    const st = getStat(`c:${t}:${verb}:${i}`);
+                    const cls = !st ? '' : st.box >= 4 ? 'cov-ok' : st.box <= 2 ? 'cov-bad' : '';
+                    return (
+                      <td key={t} className={cls}>
+                        {v.impersonal && i !== 2 ? '—' : conjugate(verb, t, i)}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="muted small">● = something irregular in this tense</p>
+        <p className="muted small">● = irregular in this tense · green = mastered · red = recently wrong</p>
       </div>
     </div>
   );

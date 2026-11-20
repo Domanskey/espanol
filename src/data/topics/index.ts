@@ -8,6 +8,7 @@ import { pronombres } from './pronombres';
 import { preposiciones } from './preposiciones';
 import { serEstarHay } from './ser-estar-hay';
 import { presente, gerundio, gustar, conectores, basicos } from './repaso';
+import { interrogativos } from './interrogativos';
 
 /** Ordered by priority for the exams */
 export const TOPICS: Topic[] = [
@@ -24,4 +25,5 @@ export const TOPICS: Topic[] = [
   gustar,
   conectores,
   basicos,
+  interrogativos,
 ];

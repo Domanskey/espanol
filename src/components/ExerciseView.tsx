@@ -32,10 +32,14 @@ export function ExerciseView({ ex, answers, onChange, verdicts, onSubmit, autoFo
   };
 
   const onKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && onSubmit) {
-      e.preventDefault();
-      onSubmit();
-    }
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    // multi-input exercises: jump to the next empty input first
+    const inputs = [...(rootRef.current?.querySelectorAll<HTMLInputElement>('input.blank') ?? [])];
+    const i = inputs.indexOf(e.currentTarget);
+    const nextEmpty = [...inputs.slice(i + 1), ...inputs.slice(0, i)].find((el) => !el.value.trim());
+    if (nextEmpty && !graded) nextEmpty.focus();
+    else onSubmit?.();
   };
 
   const input = (i: number, size: number, label: string) => (
@@ -67,6 +71,34 @@ export function ExerciseView({ ex, answers, onChange, verdicts, onSubmit, autoFo
           </div>
         </div>
         {graded && !hideSolution && <Solution verdicts={verdicts!} solution={ex.answer} />}
+      </div>
+    );
+  }
+
+  if (ex.kind === 'table') {
+    return (
+      <div ref={rootRef} className="exercise">
+        <div className="conj-prompt">
+          <span className="tag">{TENSE_LABEL[ex.tense]}</span>
+          <div className="conj-verb">
+            {ex.verb} <span className="muted">({ex.en})</span>
+          </div>
+          <p className="muted small">Fill in all six forms.</p>
+        </div>
+        <table className="table-ex">
+          <tbody>
+            {PERSONS.map((p, i) => (
+              <tr key={p}>
+                <td className="muted">{p}</td>
+                <td>
+                  {input(i, 18, p)}
+                  {graded && verdicts![i] !== 'ok' && !hideSolution && <span className="correction">{ex.answers[i]}</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {graded && !hideSolution && verdicts!.includes('accent') && <p className="accent-note">Check the accents: they matter (hablo ≠ habló).</p>}
       </div>
     );
   }

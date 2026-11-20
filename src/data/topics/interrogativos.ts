@@ -1,0 +1,57 @@
+import type { Topic } from '../../types';
+
+export const interrogativos: Topic = {
+  id: 'interrogativos',
+  title: 'Pronombres interrogativos',
+  subtitle: 'qué, cuál, cómo, cuándo, cuánto, dónde, por qué, quién',
+  stars: 1,
+  theory: [
+    {
+      type: 'table',
+      head: ['Word', 'Meaning', 'Example'],
+      rows: [
+        ['**qué**', 'what', '¿**Qué** comes? · ¿**Qué** es una paella? (definition)'],
+        ['**cuál / cuáles**', 'which / what (choosing)', '¿**Cuál** es tu nombre? · ¿**Cuáles** son tus asignaturas?'],
+        ['**cómo**', 'how', '¿**Cómo** te llamas? · ¿**Cómo** es tu casa?'],
+        ['**cuándo**', 'when', '¿**Cuándo** es tu cumpleaños?'],
+        ['**cuánto / cuánta / cuántos / cuántas**', 'how much / how many (agrees with the noun)', '¿**Cuánto** cuesta? · ¿**Cuántos** años tienes? · ¿**Cuántas** horas?'],
+        ['**dónde / adónde / de dónde**', 'where / where to / where from', '¿**Dónde** vives? · ¿**Adónde** vas? · ¿**De dónde** eres?'],
+        ['**por qué**', 'why (answer: **porque**)', '¿**Por qué** estudias español? —**Porque** me gusta.'],
+        ['**quién / quiénes**', 'who', '¿**Quién** es? · ¿**Quiénes** son esos chicos?'],
+      ],
+    },
+    {
+      type: 'list',
+      items: [
+        'Direct questions have **¿ … ?** at the start and the end: *¿Qué comes?*',
+        'Indirect questions have no question marks but **keep the accent**: *No sé **qué** comes. Dime **dónde** vives.*',
+        '**¿Qué es…?** asks for a definition · **¿Cuál es…?** picks one from several options: *¿Cuál es la capital de España?*',
+      ],
+    },
+  ],
+  items: [
+    { t: 'fill', text: '¿[[Qué]] comes normalmente?' },
+    { t: 'fill', text: '¿[[Cuál]] es tu nombre?' },
+    { t: 'fill', text: '¿[[Cuáles]] son tus asignaturas favoritas?' },
+    { t: 'fill', text: '¿[[Cómo]] te llamas?' },
+    { t: 'fill', text: '¿[[Cuándo]] es tu cumpleaños?' },
+    { t: 'fill', text: '¿[[Cuánto]] cuesta un café aquí?' },
+    { t: 'fill', text: '¿[[Cuántos]] años tienes?' },
+    { t: 'fill', text: '¿[[Cuántas]] horas estudias al día?', why: 'horas is feminine plural → cuántas' },
+    { t: 'fill', text: '¿[[Dónde]] vives?' },
+    { t: 'fill', text: '¿[[Adónde]] vas este fin de semana?', why: 'direction (ir a) → adónde' },
+    { t: 'fill', text: '¿[[De dónde]] eres? —Soy de Polonia.' },
+    { t: 'fill', text: '¿[[Por qué]] estudias español? —[[Porque]] me gusta.' },
+    { t: 'fill', text: '¿[[Quién]] es tu profesor?' },
+    { t: 'fill', text: '¿[[Quiénes]] son esos chicos?' },
+    { t: 'fill', text: '¿[[Cuánto]] mides? —Mido uno setenta y cinco.' },
+    { t: 'fill', text: '¿[[Cuántos]] kilómetros hay de aquí a tu ciudad?' },
+    { t: 'fill', text: '¿[[Cómo]] es tu piso? —Es pequeño pero bonito.' },
+    { t: 'fill', text: 'No sé [[qué]] quieres.', why: 'indirect question: no ¿?, but keeps the accent' },
+    { t: 'fill', text: 'No sé [[dónde]] vive Jorge.', why: 'indirect question: keeps the accent' },
+    { t: 'fill', text: 'Dime [[cuándo]] vienes.' },
+    { t: 'choice', text: '¿___ es la capital de España?', options: ['Qué', 'Cuál'], answer: 'Cuál', why: 'choosing one from several → cuál' },
+    { t: 'choice', text: '¿___ es una horchata?', options: ['Qué', 'Cuál'], answer: 'Qué', why: 'asking for a definition → qué' },
+    { t: 'choice', text: '¿___ personas hay en tu clase?', options: ['Cuánto', 'Cuántas', 'Cuántos'], answer: 'Cuántas', why: 'personas is feminine plural' },
+  ],
+};

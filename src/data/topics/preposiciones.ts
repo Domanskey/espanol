@@ -76,5 +76,18 @@ export const preposiciones: Topic = {
     { t: 'choice', text: 'Llegué tarde ___ el tráfico.', options: ['por', 'para'], answer: 'por', why: 'cause → por' },
     { t: 'choice', text: 'Visité ___ mi abuela el domingo.', options: ['a', 'en', '— (nothing)'], answer: 'a', why: 'personal a before people' },
     { t: 'choice', text: 'Visité ___ el museo el domingo.', options: ['a', 'en', '— (nothing)'], answer: '— (nothing)', why: 'no personal a for things' },
+    // --- from the answer key: currículum
+    { t: 'fill', text: 'Trabajé en un hotel [[desde]] 2018 [[hasta]] 2020.' },
+    { t: 'fill', text: 'Me gradué [[en]] 2018.' },
+    { t: 'fill', text: 'Hizo un máster [[en]] Irlanda.' },
+    { t: 'fill', text: 'Trabajó [[de]] camarero en un hotel.', why: 'trabajar de + profession' },
+    { t: 'fill', text: 'Hice prácticas [[en]] la compañía Tecnos.' },
+    { t: 'fill', text: 'Se mudó a España [[a]] los seis años.', why: 'a + age: a los seis años' },
+    { t: 'fill', text: 'Hedy Lamarr nació [[en]] Viena [[en]] 1914.' },
+    { t: 'fill', text: 'Normalmente voy a clase [[a]] pie, pero hoy voy [[en]] bici.', why: 'a pie, but en bici / en coche / en tren' },
+    { t: 'fill', text: 'El baño está [[entre]] las dos habitaciones.' },
+    { t: 'fill', text: 'Sara García se centró [[en]] la investigación contra el cáncer.' },
+    { t: 'fill', text: 'Se alojó [[en]] casa [[de]] una amiga.' },
+    { t: 'fill', text: 'El trabajo es [[para]] mañana.', why: 'deadline → para' },
   ],
 };

@@ -1,8 +1,8 @@
 import type { Exercise, Tense, Topic, Verdict } from '../types';
 import { TOPICS } from '../data/topics';
-import { conjugate, getVerb, isIrregular, VERBS } from '../data/verbs';
+import { acceptedForms, conjugate, DRILL_VERBS, getVerb, hasVerb } from '../data/verbs';
 import { blanksOf, check } from './check';
-import { allStats, isDue, itemScore } from './progress';
+import { allStats, isDue, itemScore, record } from './progress';
 
 function hash(s: string): string {
   let h = 5381;
@@ -22,10 +22,63 @@ export function shuffle<T>(a: T[]): T[] {
 export function conjVerbs(topic: Topic): string[] {
   if (!topic.conj) return [];
   if (topic.conj.verbs) return topic.conj.verbs;
-  const t = topic.conj.tense;
-  // presente & gerundio: regulars are A1, drill only the irregular ones
-  if (t === 'presente' || t === 'gerundio') return VERBS.filter((v) => isIrregular(v.inf, t)).map((v) => v.inf);
-  return VERBS.map((v) => v.inf);
+  // every verb the platform knows, in every person
+  return DRILL_VERBS;
+}
+
+/** Topic that owns the drills of a tense */
+export const TENSE_TOPIC: Record<Tense, string> = {
+  indefinido: 'indefinido',
+  imperfecto: 'imperfecto',
+  perfecto: 'perfecto',
+  presente: 'presente',
+  gerundio: 'gerundio',
+};
+export const ALL_TENSES: Tense[] = ['presente', 'indefinido', 'imperfecto', 'perfecto', 'gerundio'];
+
+export function tableExercise(inf: string, tense: Tense, topicId = TENSE_TOPIC[tense]): Exercise {
+  return {
+    kind: 'table',
+    id: `t:${tense}:${inf}`,
+    topic: topicId,
+    verb: inf,
+    en: getVerb(inf).en,
+    tense,
+    answers: [0, 1, 2, 3, 4, 5].map((p) => conjugate(inf, tense, p)),
+  };
+}
+
+const tableCache = new Map<string, Exercise[]>();
+export function tableExercises(topic: Topic): Exercise[] {
+  if (!topic.conj) return [];
+  let list = tableCache.get(topic.id);
+  if (!list) {
+    list = conjVerbs(topic).map((inf) => tableExercise(inf, topic.conj!.tense, topic.id));
+    tableCache.set(topic.id, list);
+  }
+  return list;
+}
+
+/** All forms of one verb: a full table in every tense */
+export function verbSession(inf: string): Exercise[] {
+  if (!hasVerb(inf) || getVerb(inf).impersonal) return [];
+  return ALL_TENSES.map((t) => tableExercise(inf, t));
+}
+
+/** The verb an exercise is about (for the "all forms of X" link) */
+export function verbOf(ex: Exercise): string | undefined {
+  if (ex.kind === 'conjugate' || ex.kind === 'table') return ex.verb;
+  if (ex.kind === 'fill') {
+    const hint = blanksOf(ex.text).find((b) => b.hint && hasVerb(b.hint) && !getVerb(b.hint).impersonal)?.hint;
+    return hint;
+  }
+  return undefined;
+}
+
+/** Save the result; tables also count for each single form (c:tense:verb:person) */
+export function recordResult(ex: Exercise, verdicts: Verdict[]) {
+  record(ex.id, verdicts.every((v) => v === 'ok'));
+  if (ex.kind === 'table') verdicts.forEach((v, p) => record(`c:${ex.tense}:${ex.verb}:${p}`, v === 'ok', false));
 }
 
 export function conjExercise(topicId: string, inf: string, tense: Tense, person: number): Exercise {
@@ -93,11 +146,19 @@ function prioritize(list: Exercise[]): Exercise[] {
 
 export function buildPractice(topic: Topic, n = 15): Exercise[] {
   const conj = conjExercises(topic);
+  const tables = tableExercises(topic);
   const items = itemExercises(topic);
+  let nTable = 0;
   let nConj = 0;
-  if (conj.length && items.length) nConj = Math.round(n * 0.4);
-  else if (conj.length) nConj = n;
-  const picked = [...prioritize(conj).slice(0, nConj), ...prioritize(items).slice(0, n - nConj)];
+  if (conj.length) {
+    nTable = 3;
+    nConj = items.length ? 4 : n - nTable;
+  }
+  const picked = [
+    ...prioritize(tables).slice(0, nTable),
+    ...prioritize(conj).slice(0, nConj),
+    ...prioritize(items).slice(0, n - nTable - nConj),
+  ];
   return shuffle(picked);
 }
 
@@ -106,7 +167,7 @@ let allMap: Map<string, Exercise> | null = null;
 function allExercises(): Map<string, Exercise> {
   if (!allMap) {
     allMap = new Map();
-    for (const t of TOPICS) for (const e of [...conjExercises(t), ...itemExercises(t)]) allMap.set(e.id, e);
+    for (const t of TOPICS) for (const e of [...conjExercises(t), ...tableExercises(t), ...itemExercises(t)]) allMap.set(e.id, e);
   }
   return allMap;
 }
@@ -143,7 +204,9 @@ export function mastery(topic: Topic): number {
 export function grade(ex: Exercise, answers: string[]): Verdict[] {
   switch (ex.kind) {
     case 'conjugate':
-      return [check(answers[0] ?? '', [ex.answer], { allowSubject: true })];
+      return [check(answers[0] ?? '', acceptedForms(ex.verb, ex.tense, ex.person), { allowSubject: true })];
+    case 'table':
+      return ex.answers.map((_, i) => check(answers[i] ?? '', acceptedForms(ex.verb, ex.tense, i), { allowSubject: true }));
     case 'choice':
       return [answers[0] === ex.answer ? 'ok' : 'wrong'];
     case 'fill':
@@ -152,6 +215,7 @@ export function grade(ex: Exercise, answers: string[]): Verdict[] {
 }
 
 export function blankCount(ex: Exercise): number {
+  if (ex.kind === 'table') return 6;
   return ex.kind === 'fill' ? blanksOf(ex.text).length : 1;
 }
 

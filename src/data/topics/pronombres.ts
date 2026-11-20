@@ -114,5 +114,16 @@ export const pronombres: Topic = {
       answer: 'les',
       why: 'to whom? (plural) → les',
     },
+    // --- from the answer key: Unidad 3, objeto indirecto
+    { t: 'fill', text: 'Jorge Juan [[le|a Verónica]] dijo "feliz cumpleaños" a Verónica.' },
+    { t: 'fill', text: 'Lo sabía porque Verónica [[le|a él]] escribió un mensaje.' },
+    { t: 'fill', text: 'Para su cumpleaños, él [[le|a ella]] regaló una camiseta para correr.' },
+    { t: 'fill', text: 'El camarero [[les|a los chicos]] trajo agua a los chicos.' },
+    { t: 'fill', text: 'Los chicos [[le|al camarero]] dijeron al camarero que no toman picante.' },
+    { t: 'fill', text: '¿Y la camiseta de Gran Bretaña? Julie [[se la|a él + la camiseta]] llevó ayer.', why: 'le + la → se la' },
+    { t: 'fill', text: '¿[[Me|a mí]] dices la verdad? —Sí, [[te la|a ti + la verdad]] digo.' },
+    { t: 'fill', text: 'A mis padres no [[les|a mis padres]] gustó la película.' },
+    { t: 'fill', text: '¿Has visto a Cecilia y a Julie? Sí, [[las|Cecilia y Julie]] he visto en la plaza.' },
+    { t: 'fill', text: '¿Dónde compraste esos zapatos? [[Los|los zapatos]] compré en el centro.' },
   ],
 };

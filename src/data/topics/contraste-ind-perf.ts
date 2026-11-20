@@ -70,5 +70,14 @@ export const contrasteIndPerf: Topic = {
       title: 'Hoy vs ayer (story)',
       text: 'Hoy [[me he levantado|levantarse]] a las siete, pero ayer [[me levanté|levantarse]] a las diez. Esta mañana [[he desayunado|desayunar]] café con tostadas; ayer no [[desayuné|desayunar]] nada. Esta semana [[he ido|ir]] al gimnasio tres veces, pero la semana pasada no [[fui|ir]] ni una vez.',
     },
+    // --- from the answer key
+    { t: 'fill', text: 'Jorge Juan [[empezó|empezar]] la universidad hace dos semanas y hasta ahora [[se ha sentido|sentirse]] bien.' },
+    { t: 'fill', text: 'En 2022 la Agencia Espacial Europea [[seleccionó|seleccionar]] a Sara García; hasta ahora [[ha recibido|recibir]] muchos premios.' },
+    { t: 'fill', text: 'Ayer Jaime [[tuvo|tener]] clase de Circuitos; hoy [[ha tenido|tener]] clase de Cálculo.' },
+    { t: 'fill', text: 'El año pasado (nosotros) [[viajamos|viajar]] mucho; este año [[hemos viajado|viajar]] poco.' },
+    { t: 'fill', text: 'Esta semana (tú) [[has ido|ir]] al gimnasio dos veces; la semana pasada no [[fuiste|ir]] ni una vez.' },
+    { t: 'fill', text: 'Anoche (vosotros) [[os acostasteis|acostarse]] tarde; esta noche [[os habéis acostado|acostarse]] pronto.' },
+    { t: 'fill', text: 'Todavía no (yo) [[he probado|probar]] la horchata, pero ayer [[probé|probar]] la fideuá.' },
+    { t: 'fill', text: 'Mis amigos [[aprobaron|aprobar]] todo el semestre pasado; este semestre [[han aprobado|aprobar]] casi todo.' },
   ],
 };

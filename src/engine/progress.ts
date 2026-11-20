@@ -12,7 +12,7 @@ interface Store {
   items: Record<string, ItemStat>;
   /** answers given per day, YYYY-MM-DD -> count */
   days: Record<string, number>;
-  /** free text saved by writing / presentation pages */
+  /** free text saved by the writing page */
   notes: Record<string, string>;
 }
 
@@ -45,7 +45,8 @@ export function getStat(id: string): ItemStat | undefined {
   return load().items[id];
 }
 
-export function record(id: string, correct: boolean) {
+/** countDay=false for derived records (e.g. each cell of a table) */
+export function record(id: string, correct: boolean, countDay = true) {
   const s = load();
   const prev = s.items[id];
   const box = !prev ? (correct ? 3 : 1) : correct ? Math.min(5, prev.box + 1) : 1;
@@ -55,8 +56,10 @@ export function record(id: string, correct: boolean) {
     correct: (prev?.correct ?? 0) + (correct ? 1 : 0),
     last: Date.now(),
   };
-  const d = today();
-  s.days[d] = (s.days[d] ?? 0) + 1;
+  if (countDay) {
+    const d = today();
+    s.days[d] = (s.days[d] ?? 0) + 1;
+  }
   save();
 }
 

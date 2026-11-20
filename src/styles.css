@@ -776,52 +776,6 @@ aside .card h3 {
   margin-top: 0;
 }
 
-/* presentation */
-.timer-card {
-  text-align: center;
-}
-.huge {
-  font-size: 3.5rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--accent);
-}
-.huge.warn {
-  color: var(--bad);
-}
-.structure {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
-}
-.structure .card {
-  margin: 0;
-}
-.structure p {
-  margin: 6px 0 0;
-}
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 16px;
-}
-.two-col .card {
-  margin: 0;
-}
-.two-col h3:first-child {
-  margin-top: 0;
-}
-.two-col table {
-  margin-bottom: 12px;
-}
-.presentation .card + h2 {
-  margin-top: 1em;
-}
-.presentation > .card:last-child {
-  margin-top: 16px;
-}
-
 /* verbs */
 .chip {
   display: inline-flex;
@@ -876,8 +830,7 @@ aside .card h3 {
 }
 
 @media (max-width: 720px) {
-  .writing-grid,
-  .two-col {
+  .writing-grid {
     grid-template-columns: 1fr;
   }
   h1 {
@@ -895,4 +848,28 @@ aside .card h3 {
   .section-score .bar {
     grid-column: 1 / -1;
   }
+}
+
+/* table exercise */
+table.table-ex {
+  width: auto;
+  margin: 10px auto 0;
+  font-size: 1.1rem;
+}
+table.table-ex td {
+  border: none;
+  padding: 4px 8px;
+  vertical-align: middle;
+}
+.verdict-links {
+  display: flex;
+  gap: 14px;
+}
+
+/* verb coverage */
+table.conj td.cov-ok {
+  background: var(--ok-soft);
+}
+table.conj td.cov-bad {
+  background: var(--bad-soft);
 }

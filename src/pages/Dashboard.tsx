@@ -7,7 +7,6 @@ import { Bar, Stars } from '../components/common';
 export const DATES = [
   { label: 'Test de verbos', date: '2026-11-24', note: '20 min · 1 pt · the 3 past tenses (date depends on class progress)', href: '#/test/verbos' },
   { label: 'Examen final + texto', date: '2026-12-17', note: 'Grammar 4 pts (fill the gaps) + written text 2 pts', href: '#/test/final' },
-  { label: 'Presentación oral', date: '2026-12-22', note: '3 min about a trip · indefinido + imperfecto · last day', href: '#/presentation' },
 ];
 
 export function daysUntil(iso: string): number {
@@ -111,11 +110,6 @@ export function Dashboard() {
             <span className="icon">✍️</span>
             <strong>Writing practice</strong>
             <span className="muted small">Exam text: 12–15 lines in the past, 45 min, random topic</span>
-          </a>
-          <a className="card tool" href="#/presentation">
-            <span className="icon">🎤</span>
-            <strong>Presentation prep</strong>
-            <span className="muted small">3 min about a trip: structure, verbs, timer</span>
           </a>
           <a className="card tool" href="#/verbs">
             <span className="icon">📖</span>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { check, parseFill } from './check';
-import { conjugate, VERBS } from '../data/verbs';
+import { acceptedForms, conjugate, VERBS } from '../data/verbs';
 
 describe('check', () => {
   it('accepts exact answers, case and punctuation insensitive', () => {
@@ -50,6 +50,22 @@ describe('conjugate', () => {
     ['acostarse', 'presente', 2, 'se acuesta'],
     ['dormir', 'gerundio', 0, 'estoy durmiendo'],
     ['leer', 'gerundio', 2, 'está leyendo'],
+    ['oler', 'presente', 0, 'huelo'],
+    ['actuar', 'presente', 0, 'actúo'],
+    ['sonreír', 'presente', 0, 'sonrío'],
+    ['sonreír', 'indefinido', 2, 'sonrió'],
+    ['medir', 'presente', 0, 'mido'],
+    ['perseguir', 'presente', 0, 'persigo'],
+    ['perseguir', 'indefinido', 5, 'persiguieron'],
+    ['alojarse', 'indefinido', 0, 'me alojé'],
+    ['especializarse', 'indefinido', 0, 'me especialicé'],
+    ['graduarse', 'presente', 0, 'me gradúo'],
+    ['graduarse', 'indefinido', 2, 'se graduó'],
+    ['morirse', 'gerundio', 0, 'me estoy muriendo'],
+    ['aprobar', 'presente', 2, 'aprueba'],
+    ['merendar', 'presente', 5, 'meriendan'],
+    ['sonreír', 'gerundio', 0, 'estoy sonriendo'],
+    ['reírse', 'gerundio', 0, 'me estoy riendo'],
   ];
   it.each(cases)('%s %s %i -> %s', (inf, tense, p, expected) => {
     expect(conjugate(inf, tense, p)).toBe(expected);
@@ -58,5 +74,11 @@ describe('conjugate', () => {
     for (const v of VERBS)
       for (const t of ['presente', 'indefinido', 'imperfecto', 'perfecto', 'gerundio'] as const)
         for (let p = 0; p < 6; p++) expect(conjugate(v.inf, t, p)).toMatch(/^[a-záéíóúñ ]+$/);
+  });
+
+  it('reflexive gerunds accept the attached pronoun', () => {
+    expect(acceptedForms('ducharse', 'gerundio', 0)).toEqual(['me estoy duchando', 'estoy duchándome']);
+    expect(acceptedForms('reírse', 'gerundio', 2)).toEqual(['se está riendo', 'está riéndose']);
+    expect(acceptedForms('hablar', 'gerundio', 0)).toEqual(['estoy hablando']);
   });
 });

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { Verdict } from '../types';
-import { blankCount, buildTest, grade, type TestSpec } from '../engine/session';
-import { record } from '../engine/progress';
+import { blankCount, buildTest, grade, recordResult, type TestSpec } from '../engine/session';
 import { AccentBar, BackLink, Bar, TimerBadge, useCountdown } from '../components/common';
 import { ExerciseView } from '../components/ExerciseView';
 
@@ -58,7 +57,7 @@ function TestRunner({ spec, onRestart }: { spec: TestSpec; onRestart: () => void
     const g: Record<string, Verdict[]> = {};
     for (const ex of all) {
       g[ex.id] = grade(ex, answers[ex.id] ?? []);
-      record(ex.id, g[ex.id].every((v) => v === 'ok'));
+      recordResult(ex, g[ex.id]);
     }
     setGraded(g);
     window.scrollTo({ top: 0, behavior: 'smooth' });

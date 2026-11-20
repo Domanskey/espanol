@@ -3,11 +3,10 @@ import { Dashboard } from './pages/Dashboard';
 import { TopicPage } from './pages/TopicPage';
 import { TestPage } from './pages/TestPage';
 import { WritingPage } from './pages/WritingPage';
-import { PresentationPage } from './pages/PresentationPage';
 import { VerbsPage } from './pages/VerbsPage';
 import { Practice } from './components/Practice';
 import { BackLink } from './components/common';
-import { buildPractice, buildReview, topicById } from './engine/session';
+import { buildPractice, buildReview, topicById, verbSession } from './engine/session';
 
 function useHash() {
   const [hash, setHash] = useState(location.hash);
@@ -45,6 +44,16 @@ export function App() {
       );
       break;
     }
+    case 'verb': {
+      const inf = decodeURIComponent(arg ?? '');
+      page = (
+        <>
+          <BackLink to="#/verbs" label="← Verbs" />
+          <Practice key={hash} title={`All forms: ${inf}`} exercises={verbSession(inf)} onNewRound={() => verbSession(inf)} exitHref="#/verbs" />
+        </>
+      );
+      break;
+    }
     case 'review':
       page = (
         <>
@@ -58,9 +67,6 @@ export function App() {
       break;
     case 'writing':
       page = <WritingPage />;
-      break;
-    case 'presentation':
-      page = <PresentationPage />;
       break;
     case 'verbs':
       page = <VerbsPage />;

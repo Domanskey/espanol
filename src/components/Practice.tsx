@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Exercise, Verdict } from '../types';
-import { grade, topicById } from '../engine/session';
-import { record } from '../engine/progress';
+import { grade, recordResult, topicById, verbOf } from '../engine/session';
 import { AccentBar, Bar } from './common';
 import { ExerciseView } from './ExerciseView';
 
@@ -41,7 +40,7 @@ export function Practice({ title, exercises: initial, onNewRound, exitHref = '#/
     if (!ex || verdicts) return;
     const v = grade(ex, ans);
     setVerdicts(v);
-    record(ex.id, v.every((x) => x === 'ok'));
+    recordResult(ex, v);
     setResults((r) => [...r, { ex, answers: ans, verdicts: v }]);
   };
 
@@ -126,6 +125,7 @@ export function Practice({ title, exercises: initial, onNewRound, exitHref = '#/
   const topic = topicById(ex.topic);
   const canCheck = ex.kind === 'choice' ? answers[0] !== undefined : answers.some((a) => a?.trim());
   const allOk = verdicts?.every((v) => v === 'ok');
+  const verb = verbOf(ex);
 
   return (
     <div className="practice">
@@ -154,11 +154,18 @@ export function Practice({ title, exercises: initial, onNewRound, exitHref = '#/
         {verdicts && (
           <div className={`verdict ${allOk ? 'ok' : 'wrong'}`}>
             {allOk ? '✓ ¡Correcto!' : verdicts.includes('accent') && !verdicts.includes('wrong') ? '≈ Almost: accents' : '✗ Not quite'}
-            {topic && !allOk && (
-              <a className="theory-link" href={`#/topic/${topic.id}`} target="_blank" rel="noreferrer">
-                theory ↗
-              </a>
-            )}
+            <span className="verdict-links">
+              {verb && ex.kind !== 'table' && (
+                <a className="theory-link" href={`#/verb/${encodeURIComponent(verb)}`} target="_blank" rel="noreferrer">
+                  all forms of <em>{verb}</em> ↗
+                </a>
+              )}
+              {topic && !allOk && (
+                <a className="theory-link" href={`#/topic/${topic.id}`} target="_blank" rel="noreferrer">
+                  theory ↗
+                </a>
+              )}
+            </span>
           </div>
         )}
       </div>
@@ -192,6 +199,12 @@ function MistakeLine({ r }: { r: Result }) {
       <>
         {ex.verb}, {['yo', 'tú', 'él', 'nosotros', 'vosotros', 'ellos'][ex.person]}: <strong>{ex.answer}</strong>{' '}
         {r.answers[0] && <span className="muted">(you: {r.answers[0]})</span>}
+      </>
+    );
+  if (ex.kind === 'table')
+    return (
+      <>
+        {ex.verb} ({ex.tense}): <strong>{ex.answers.join(', ')}</strong>
       </>
     );
   if (ex.kind === 'choice')

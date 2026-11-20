@@ -25,6 +25,8 @@ export interface Verb {
   imp?: Six;
   part?: string;
   ger?: string;
+  /** only used in the 3rd person (llover): excluded from person drills */
+  impersonal?: true;
 }
 
 export const VERBS: Verb[] = [
@@ -258,9 +260,82 @@ export const VERBS: Verb[] = [
     part: 'reído',
     ger: 'riendo',
   },
+
+  // ---- added from the answer key (Unidades 0–6)
+  { inf: 'llamar', en: 'to call' },
+  // gustar-type verbs: practised as me/te/le/nos/os/les gusta(n) in the "gustar" topic, not as yo/tú drills
+  { inf: 'gustar', en: 'to like (me gusta)', impersonal: true },
+  { inf: 'encantar', en: 'to love (me encanta)', impersonal: true },
+  { inf: 'doler', en: 'to hurt (me duele)', pres: { change: 'ue' }, impersonal: true },
+  { inf: 'molestar', en: 'to bother (me molesta)', impersonal: true },
+  { inf: 'interesar', en: 'to interest (me interesa)', impersonal: true },
+  { inf: 'alojarse', en: 'to stay (lodging)' },
+  { inf: 'gastar', en: 'to spend (money)' },
+  { inf: 'graduarse', en: 'to graduate', pres: { full: ['gradúo', 'gradúas', 'gradúa', 'graduamos', 'graduáis', 'gradúan'] } },
+  { inf: 'mudarse', en: 'to move (house)' },
+  { inf: 'aprobar', en: 'to pass (an exam)', pres: { change: 'ue' } },
+  { inf: 'regalar', en: 'to give (as a present)' },
+  { inf: 'preparar', en: 'to prepare' },
+  { inf: 'entrenar', en: 'to train' },
+  { inf: 'merendar', en: 'to have an afternoon snack', pres: { change: 'ie' } },
+  { inf: 'descansar', en: 'to rest' },
+  { inf: 'relajarse', en: 'to relax' },
+  { inf: 'saludar', en: 'to greet' },
+  { inf: 'cambiarse', en: 'to get changed' },
+  { inf: 'especializarse', en: 'to specialise' },
+  { inf: 'seleccionar', en: 'to select' },
+  { inf: 'apoyar', en: 'to support' },
+  { inf: 'aconsejar', en: 'to advise' },
+  { inf: 'disfrutar', en: 'to enjoy' },
+  { inf: 'cursar', en: 'to study (a course)' },
+  { inf: 'besar', en: 'to kiss' },
+  { inf: 'bañarse', en: 'to bathe / to swim' },
+  { inf: 'caminar', en: 'to walk' },
+  { inf: 'pasar', en: 'to pass / to spend (time) / to happen' },
+  { inf: 'matricularse', en: 'to enrol' },
+  { inf: 'centrarse', en: 'to focus' },
+  { inf: 'casarse', en: 'to get married' },
+  { inf: 'ganar', en: 'to win / to earn' },
+  { inf: 'enseñar', en: 'to teach / to show' },
+  { inf: 'destacar', en: 'to stand out' },
+  { inf: 'sonar', en: 'to ring / to sound', pres: { change: 'ue' } },
+  { inf: 'llover', en: 'to rain', pres: { change: 'ue' }, impersonal: true },
+  { inf: 'defender', en: 'to defend', pres: { change: 'ie' } },
+  { inf: 'confundir', en: 'to confuse' },
+  { inf: 'perseguir', en: 'to chase / to persecute', pres: { change: 'i', yo: 'persigo' }, pret: { change: 'i' } },
+  { inf: 'medir', en: 'to measure / to be (height)', pres: { change: 'i' }, pret: { change: 'i' } },
+  { inf: 'morirse', en: 'to die (also: me muero de calor)', pres: { change: 'ue' }, pret: { change: 'u' }, part: 'muerto' },
+  {
+    inf: 'prohibir',
+    en: 'to forbid',
+    pres: { full: ['prohíbo', 'prohíbes', 'prohíbe', 'prohibimos', 'prohibís', 'prohíben'] },
+  },
+  {
+    inf: 'oler',
+    en: 'to smell',
+    pres: { full: ['huelo', 'hueles', 'huele', 'olemos', 'oléis', 'huelen'] },
+  },
+  {
+    inf: 'actuar',
+    en: 'to act',
+    pres: { full: ['actúo', 'actúas', 'actúa', 'actuamos', 'actuáis', 'actúan'] },
+  },
+  {
+    inf: 'sonreír',
+    en: 'to smile',
+    pres: { full: ['sonrío', 'sonríes', 'sonríe', 'sonreímos', 'sonreís', 'sonríen'] },
+    pret: { full: ['sonreí', 'sonreíste', 'sonrió', 'sonreímos', 'sonreísteis', 'sonrieron'] },
+    part: 'sonreído',
+    ger: 'sonriendo',
+  },
 ];
 
 const BY_INF = new Map(VERBS.map((v) => [v.inf, v]));
+export const hasVerb = (inf: string) => BY_INF.has(inf);
+
+/** Verbs that can be drilled in all persons */
+export const DRILL_VERBS = VERBS.filter((v) => !v.impersonal).map((v) => v.inf);
+
 export function getVerb(inf: string): Verb {
   const v = BY_INF.get(inf);
   if (!v) throw new Error(`Unknown verb: ${inf}`);
@@ -377,4 +452,13 @@ export function isIrregular(inf: string, tense: Tense): boolean {
     case 'gerundio':
       return !!v.ger || !!v.pret?.change;
   }
+}
+
+/** All accepted answers for a form: reflexive gerunds also allow the attached pronoun (estoy duchándome) */
+export function acceptedForms(inf: string, tense: Tense, p: number): string[] {
+  const main = conjugate(inf, tense, p);
+  if (tense !== 'gerundio' || !isReflexive(getVerb(inf))) return [main];
+  const [pron, estar, ger] = main.split(' ');
+  const accented = ger.replace(/([ae])ndo$/, (_, v: string) => (v === 'a' ? 'á' : 'é') + 'ndo');
+  return [main, `${estar} ${accented}${pron}`];
 }
