@@ -1,0 +1,93 @@
+import type { Topic } from '../../types';
+
+export const perfecto: Topic = {
+  id: 'perfecto',
+  title: 'Pretérito perfecto',
+  subtitle: 'Pretérito perfecto compuesto: he hablado, has comido (a past still connected to now)',
+  stars: 3,
+  exam: ['verbos', 'final'],
+  conj: { tense: 'perfecto' },
+  theory: [
+    {
+      type: 'p',
+      text: '**Use:** a past action **connected to the present**: it happened in a time period that is **not over yet** (today, this week, this year, my life).',
+    },
+    {
+      type: 'list',
+      items: [
+        '**Today:** Esta mañana **he desayunado** leche. Esta tarde **he hablado** español.',
+        '**Recently:** Esta semana **he comido** mucho. Últimamente **he bebido** mucha agua.',
+        '**Until now / ever:** Siempre **he vivido** aquí. Todavía **no he probado** la paella. Ya **he visitado** Florencia.',
+      ],
+    },
+    {
+      type: 'tip',
+      text: 'Trigger words: **hoy, esta mañana, esta tarde, esta semana, este mes, este año, últimamente, recientemente, hace un rato, ya, todavía no, nunca, alguna vez, siempre (hasta ahora)**',
+    },
+    { type: 'h', text: 'Form: HABER (present) + participle' },
+    {
+      type: 'table',
+      head: ['', 'haber', '-AR → -ado', '-ER / -IR → -ido'],
+      rows: [
+        ['yo', 'he', 'he habl**ado**', 'he com**ido**'],
+        ['tú', 'has', 'has habl**ado**', 'has viv**ido**'],
+        ['él / ella / usted', 'ha', 'ha habl**ado**', 'ha com**ido**'],
+        ['nosotros/as', 'hemos', 'hemos habl**ado**', 'hemos viv**ido**'],
+        ['vosotros/as', 'habéis', 'habéis habl**ado**', 'habéis com**ido**'],
+        ['ellos / ustedes', 'han', 'han habl**ado**', 'han viv**ido**'],
+      ],
+    },
+    { type: 'h', text: 'Irregular participles: learn these!' },
+    {
+      type: 'table',
+      head: ['Infinitivo', 'Participio', 'Infinitivo', 'Participio'],
+      rows: [
+        ['hacer', '**hecho**', 'abrir', '**abierto**'],
+        ['decir', '**dicho**', 'romper', '**roto**'],
+        ['poner', '**puesto**', 'morir', '**muerto**'],
+        ['volver', '**vuelto**', 'descubrir', '**descubierto**'],
+        ['escribir', '**escrito**', 'ver', '**visto**'],
+      ],
+    },
+    {
+      type: 'list',
+      items: [
+        'The participle **never changes**: *ella ha comid**o***, not *comida*',
+        'Nothing goes between haber and the participle. Pronouns go **before** haber: **me he** levantado, **lo he** visto',
+        'Vowel + -ido takes an accent: le**í**do, cre**í**do, tra**í**do, o**í**do',
+      ],
+    },
+  ],
+  items: [
+    { t: 'fill', text: 'Hoy (yo) [[he trabajado|trabajar]] ocho horas.' },
+    { t: 'fill', text: 'Esta mañana mi hermano [[ha desayunado|desayunar]] tostadas.' },
+    { t: 'fill', text: 'Esta semana (nosotros) [[hemos estudiado|estudiar]] mucho.' },
+    { t: 'fill', text: '¿[[Has visto|ver]] mis gafas? No las encuentro.' },
+    { t: 'fill', text: 'Todavía no (yo) [[he hecho|hacer]] los deberes.' },
+    { t: 'fill', text: 'Mis padres nunca [[han estado|estar]] en Japón.' },
+    { t: 'fill', text: '¿Alguna vez [[habéis comido|comer]] paella valenciana?' },
+    { t: 'fill', text: 'Este año (yo) [[he leído|leer]] mucho en español.' },
+    { t: 'fill', text: 'Carlos ya [[ha vuelto|volver]] de su viaje.' },
+    { t: 'fill', text: '¿Quién [[ha abierto|abrir]] la ventana? Hace frío.' },
+    { t: 'fill', text: 'Esta tarde (yo) [[he escrito|escribir]] un correo a mi profesor.' },
+    { t: 'fill', text: 'Hoy los niños [[han roto|romper]] un vaso.' },
+    { t: 'fill', text: '¿Qué te [[ha dicho|decir]] el médico esta mañana?' },
+    { t: 'fill', text: 'Últimamente (nosotros) [[hemos ido|ir]] mucho al cine.' },
+    { t: 'fill', text: 'Esta mañana (yo) [[me he levantado|levantarse]] muy temprano.' },
+    { t: 'fill', text: 'Siempre (yo) [[he vivido|vivir]] en esta ciudad.' },
+    { t: 'fill', text: 'Este mes Ana [[ha tenido|tener]] tres exámenes.' },
+    { t: 'fill', text: '¿Dónde [[has puesto|poner]] el móvil?' },
+    { t: 'fill', text: 'Hoy (tú) no [[has dicho|decir]] nada en clase.' },
+    { t: 'fill', text: 'Esta semana mis amigos [[han visitado|visitar]] el museo.' },
+    { t: 'fill', text: 'Ya (yo) [[he visitado|visitar]] Florencia dos veces en mi vida.' },
+    { t: 'fill', text: 'Todavía no (nosotros) [[hemos probado|probar]] la horchata.' },
+    { t: 'fill', text: 'Hoy [[ha llovido|llover]] todo el día.' },
+    { t: 'fill', text: 'Este año mi universidad [[ha descubierto|descubrir]] un nuevo material.' },
+    { t: 'fill', text: '¿Ya [[os habéis duchado|ducharse]]? Nos vamos en cinco minutos.' },
+    {
+      t: 'fill',
+      title: 'Un día muy completo (story)',
+      text: 'Hoy [[ha sido|ser]] un día muy completo. Esta mañana [[me he levantado|levantarse]] a las seis y [[he ido|ir]] al gimnasio. Después [[he desayunado|desayunar]] con mi compañera de piso y las dos [[hemos ido|ir]] a la universidad. En clase el profesor nos [[ha explicado|explicar]] el pretérito perfecto. Esta tarde [[he escrito|escribir]] un texto y todavía no [[he hecho|hacer]] la cena.',
+    },
+  ],
+};

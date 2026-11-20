@@ -1,0 +1,73 @@
+import type { Topic } from '../../types';
+
+export const imperfecto: Topic = {
+  id: 'imperfecto',
+  title: 'Pretérito imperfecto',
+  subtitle: 'hablaba, comía, vivía (descriptions, habits, ongoing situations)',
+  stars: 3,
+  exam: ['verbos', 'final'],
+  conj: { tense: 'imperfecto' },
+  theory: [
+    {
+      type: 'p',
+      text: '**Use:** the "background" of the past. Something **not finished**, continuous, or repeated: **descriptions**, **habits** and situations that were **in progress**. It does not say how long something lasted.',
+    },
+    {
+      type: 'list',
+      items: [
+        '**Descriptions:** Fui a Valencia. La ciudad **era** bonita y **hacía** sol.',
+        '**Habits:** Allí cada día **tomaba** naranjas. De pequeño **jugaba** al fútbol.',
+        '**Action in progress:** El lunes a las 2 **dormía** / **estaba durmiendo**.',
+        '**Age, time, feelings in the past:** **Tenía** 10 años. **Eran** las ocho. **Estaba** cansado.',
+      ],
+    },
+    {
+      type: 'tip',
+      text: 'Trigger words: **normalmente, usualmente, siempre, cada día, cada semana, todos los días, a menudo, mientras, antes, de pequeño/a, cuando era pequeño/a, en aquella época**',
+    },
+    { type: 'h', text: 'Regular forms (very easy!)' },
+    { type: 'conj', tense: 'imperfecto', verbs: ['hablar', 'comer', 'escribir'] },
+    {
+      type: 'list',
+      items: [
+        '-AR: **-aba**; only nosotros has an accent: habl**á**bamos',
+        '-ER / -IR: **-ía** on every form: com**í**a, viv**í**amos',
+        'yo and él are the **same** form: *yo hablaba, él hablaba*',
+      ],
+    },
+    { type: 'h', text: 'Only 3 irregular verbs' },
+    { type: 'conj', tense: 'imperfecto', verbs: ['ser', 'ir', 'ver'] },
+    { type: 'tip', text: '**HAY in the past = HABÍA** (singular and plural): *Había un niño. Había dos niños.*' },
+  ],
+  items: [
+    { t: 'fill', text: 'Cuando era pequeño, (yo) [[jugaba|jugar]] al fútbol todos los días.' },
+    { t: 'fill', text: 'De niña, Laura [[vivía|vivir]] en un pueblo cerca de Teruel.' },
+    { t: 'fill', text: 'Antes nosotros [[íbamos|ir]] a la playa cada verano.' },
+    { t: 'fill', text: 'Mi abuela [[era|ser]] muy simpática y siempre [[cocinaba|cocinar]] para toda la familia.' },
+    { t: 'fill', text: 'En aquella época (yo) [[tenía|tener]] el pelo largo.' },
+    { t: 'fill', text: 'Normalmente mis padres [[veían|ver]] las noticias después de cenar.' },
+    { t: 'fill', text: 'La casa [[tenía|tener]] un jardín enorme y [[había|haber]] muchos árboles.' },
+    { t: 'fill', text: 'Cuando (nosotros) [[éramos|ser]] estudiantes, [[salíamos|salir]] todos los jueves.' },
+    { t: 'fill', text: '¿Dónde [[trabajabas|trabajar]] antes de venir a España?' },
+    { t: 'fill', text: 'El hotel [[estaba|estar]] en el centro y [[era|ser]] muy barato.' },
+    { t: 'fill', text: 'De pequeños, mis hermanos y yo [[veíamos|ver]] dibujos animados los sábados.' },
+    { t: 'fill', text: 'Mientras (yo) [[estudiaba|estudiar]], mi compañero [[escuchaba|escuchar]] música.' },
+    { t: 'fill', text: 'Antes no me [[gustaba|gustar]] el café, pero ahora me encanta.' },
+    { t: 'fill', text: 'En el colegio (vosotros) [[llevabais|llevar]] uniforme, ¿verdad?' },
+    { t: 'fill', text: '[[Eran|ser]] las once de la noche y [[hacía|hacer]] mucho frío.' },
+    { t: 'fill', text: 'Mi primer piso [[era|ser]] pequeño, pero [[estaba|estar]] cerca de la universidad.' },
+    { t: 'fill', text: 'Todos los veranos mi familia [[iba|ir]] a la casa de mis abuelos.' },
+    { t: 'fill', text: 'Cuando tenía 15 años, (yo) [[quería|querer]] ser piloto.' },
+    { t: 'fill', text: 'Antes en mi ciudad no [[había|haber]] metro.' },
+    { t: 'fill', text: 'Mis amigos y yo [[comíamos|comer]] en la cafetería casi todos los días.' },
+    { t: 'fill', text: 'La gente del pueblo [[hablaba|hablar]] valenciano.' },
+    { t: 'fill', text: 'Siempre (tú) [[llegabas|llegar]] tarde a clase.' },
+    { t: 'fill', text: 'Mi madre [[se levantaba|levantarse]] muy temprano para ir a trabajar.' },
+    { t: 'fill', text: 'En el pueblo no [[conocíamos|conocer]] a nadie.' },
+    {
+      t: 'fill',
+      title: 'Cómo era mi infancia (story)',
+      text: 'Cuando [[era|ser]] pequeño, [[vivía|vivir]] con mis padres en un piso en Valencia. El piso [[tenía|tener]] tres habitaciones y [[estaba|estar]] cerca de la playa. Todos los días [[iba|ir]] al colegio andando. Por las tardes [[jugaba|jugar]] con mis amigos en la calle y los fines de semana [[veíamos|ver]] películas. Mi hermana [[era|ser]] muy tranquila y siempre [[leía|leer]] libros.',
+    },
+  ],
+};
