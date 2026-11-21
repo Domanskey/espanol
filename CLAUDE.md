@@ -44,6 +44,11 @@ npm run build   # tsc type-check + vite build
 ```
 Always run `npm test` and `npm run build` after changing content or code. Commit only when the user asks.
 
+## Deployment
+- Live at **https://domanskey.github.io/espanol/** via GitHub Pages. `.github/workflows/deploy.yml` runs `npm ci → npm test → npm run build` on every push to `main` and deploys `dist/`. **A failing test blocks the deploy.**
+- `vite.config.ts` uses `base: './'` and routing is hash-based, so the app works under the `/espanol/` subpath. Keep it that way.
+- The source materials (`*.pdf`, `*.doc`, `*.docx`, `*.pptx`) are **git-ignored and local-only** (the repo is public, and librito.pdf is over GitHub's size limit). They're still in the project folder on the user's machine, so read them from disk when adding material. Older git commits still contain the first PDFs (the user chose not to rewrite history).
+
 ## Structure
 ```
 src/

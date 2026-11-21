@@ -3,6 +3,8 @@
 A personal practice platform for the UPV Español II (A2) course, Sept–Dec 2026.
 It's mostly exercises and self-testing, with short theory notes and examples based on *Español A2 Práctico*, its answer key and the exercise booklet's answer key.
 
+**Live:** https://domanskey.github.io/espanol/ (progress is saved in each browser/device separately).
+
 ## Run
 
 ```bash
