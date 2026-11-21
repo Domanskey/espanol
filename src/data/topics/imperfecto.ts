@@ -88,5 +88,18 @@ export const imperfecto: Topic = {
     { t: 'fill', text: 'Yo [[era|ser]] un niño muy tranquilo y no [[hacía|hacer]] nada mal.' },
     { t: 'fill', text: 'Antes vosotros [[ibais|ir]] mucho al cine, ¿no?' },
     { t: 'fill', title: 'Mis vacaciones de pequeña (story)', text: 'Cuando (yo) [[era|ser]] pequeña, mis vacaciones eran en un pueblo. El pueblo [[se llamaba|llamarse]] Zarra y [[estaba|estar]] en una montaña. [[Era|ser]] muy tranquilo. Todos los días [[corría|correr]] con mi perra, [[me bañaba|bañarse]] en la piscina y [[jugaba|jugar]] con mis amigos. Por la noche [[salíamos|salir]] a la plaza. Solo [[tenía|tener]] un problema: ¡no [[tenía|tener]] ordenador!' },
+    // --- from the exercise booklet (Unidad 3A)
+    { t: 'fill', text: '(nosotros) [[Estudiábamos|estudiar]] juntos en la biblioteca.' },
+    { t: 'fill', text: 'Mi abuelo me [[daba|dar]] dinero los domingos.' },
+    { t: 'fill', text: 'Antes (yo) [[venía|venir]] a clase en autobús.' },
+    { t: 'fill', text: '¿A qué hora [[salíais|salir]] (vosotros) del colegio?' },
+    { t: 'fill', text: 'El profesor no [[corregía|corregir]] los deberes.' },
+    { t: 'fill', text: 'Antes (yo) no [[traducía|traducir]] los textos con el móvil.' },
+    { t: 'fill', text: 'Ahora compro el pan en el supermercado, pero antes lo [[compraba|comprar]] aquí.', why: 'antes → imperfecto; ahora → presente' },
+    { t: 'fill', text: 'Ahora mi hermano se despierta a las ocho, pero antes [[se despertaba|despertarse]] a las seis.' },
+    { t: 'fill', text: 'Antes mis vecinos y yo [[nos saludábamos|saludarse]] siempre.' },
+    { t: 'fill', text: 'Antes (tú) me [[aconsejabas|aconsejar]] mucho.' },
+    { t: 'fill', text: 'Antes (vosotros) me [[ayudabais|ayudar]] con los deberes.' },
+    { t: 'fill', text: 'Antes no me [[importaba|importar]] el dinero.' },
   ],
 };

@@ -1,4 +1,4 @@
-export type Tense = 'presente' | 'indefinido' | 'imperfecto' | 'perfecto' | 'gerundio';
+export type Tense = 'presente' | 'indefinido' | 'imperfecto' | 'perfecto' | 'gerundio' | 'imperativo' | 'imperativo-neg';
 
 /** Theory blocks. Text supports **bold** and *italic*. */
 export type Block =
@@ -50,6 +50,8 @@ export type Exercise =
       verb: string;
       en: string;
       tense: Tense;
+      /** persons asked (imperatives have no yo) and the answers aligned with them */
+      persons: number[];
       answers: string[];
     }
   | { kind: 'fill'; id: string; topic: string; text: string; why?: string; title?: string }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { check, parseFill } from './check';
-import { acceptedForms, conjugate, VERBS } from '../data/verbs';
+import { acceptedForms, conjugate, personsFor, VERBS } from '../data/verbs';
 
 describe('check', () => {
   it('accepts exact answers, case and punctuation insensitive', () => {
@@ -72,8 +72,8 @@ describe('conjugate', () => {
   });
   it('every verb conjugates in every tense', () => {
     for (const v of VERBS)
-      for (const t of ['presente', 'indefinido', 'imperfecto', 'perfecto', 'gerundio'] as const)
-        for (let p = 0; p < 6; p++) expect(conjugate(v.inf, t, p)).toMatch(/^[a-záéíóúñ ]+$/);
+      for (const t of ['presente', 'indefinido', 'imperfecto', 'perfecto', 'gerundio', 'imperativo', 'imperativo-neg'] as const)
+        for (const p of personsFor(t)) expect(conjugate(v.inf, t, p), `${v.inf} ${t} ${p}`).toMatch(/^[a-záéíóúñ ]+$/);
   });
 
   it('reflexive gerunds accept the attached pronoun', () => {

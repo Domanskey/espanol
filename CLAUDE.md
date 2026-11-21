@@ -17,7 +17,7 @@ The user will bring more scanned textbook and handbook pages over time, to be tu
 **Final exam contents:** indefinido vs imperfecto · indefinido vs perfecto · preposiciones (a, de, en, para, por…) · objeto directo (lo, la…) + indirecto (me, te, le…) · hay / es / está.
 Full course syllabus: the 3 pasados and their contrasts, ser/estar/hay (present + past), gerundio (estaba + -ndo), present irregular review, prepositions, OD/OI, plus revision of comparatives, possessives/demonstratives and connectors.
 
-Source files: `2026 PROGRAMACION 1A2 SEP*.pptx` (grading/syllabus), `2026 A2 SEP - CALENDARIO DE CLASES*.docx` (plan for each class), `2026 1A2 Calendario de PRESENTACIONES y EXÁMENES*.doc` (exam dates and contents), `Libro 1.pdf` / `Libro 2.pdf` (book *Español A2 Práctico*, "Cuadros gramaticales" pp. 42–51: Unidad 1 tables + Unidad 2 present irregular, gustar, gerundio, pasados, contraste de pasados), `Libro soluciones.pdf` (the book's answer key, pp. 52–62, Unidades 0–6). The answer key's comprehension answers were reused as exercise sentences about the book's characters (Jorge Juan, Cecilia, Jaime, Lupe, Verónica, Julie; trips to Heidelberg/Praga/Viena/Salamanca/Roma/Teruel/Toulouse; biographies of Hedy Lamarr, Sara García Alonso, Einstein, Don Quijote). Comprehension questions about texts we don't have were skipped.
+Source files: `2026 PROGRAMACION 1A2 SEP*.pptx` (grading/syllabus), `2026 A2 SEP - CALENDARIO DE CLASES*.docx` (plan for each class), `2026 1A2 Calendario de PRESENTACIONES y EXÁMENES*.doc` (exam dates and contents), `Libro 1.pdf` / `Libro 2.pdf` (book *Español A2 Práctico*, "Cuadros gramaticales" pp. 42–51: Unidad 1 tables + Unidad 2 present irregular, gustar, gerundio, pasados, contraste de pasados), `Libro soluciones.pdf` (the book's answer key, pp. 52–62, Unidades 0–6). The answer key's comprehension answers were reused as exercise sentences about the book's characters (Jorge Juan, Cecilia, Jaime, Lupe, Verónica, Julie; trips to Heidelberg/Praga/Viena/Salamanca/Roma/Teruel/Toulouse; biographies of Hedy Lamarr, Sara García Alonso, Einstein, Don Quijote). Comprehension questions about texts we don't have were skipped. `librito.pdf` = answer key of the exercise booklet ("Librito EJERCICIOS", pp. 102–125, Unidades 1–19): perfecto, indefinido tables, imperfecto, contrasts, pasados + gerundio, gustar, reflexivos, **imperativo** (9A/9B), preposiciones, ser/estar, hay/estar, presente, obligación, artículos, indefinidos, comparativos/superlativos, errores frecuentes. It lists mostly answers without the questions, so sentences were written around them; `src/engine/imperative.test.ts` holds rows copied from its imperative and indefinido tables.
 
 ## Decisions made with the user
 - Explanations and UI are in **English**, exercises are in Spanish.
@@ -25,15 +25,16 @@ Source files: `2026 PROGRAMACION 1A2 SEP*.pptx` (grading/syllabus), `2026 A2 SEP
 - **No AI checking** for now. Writing practice uses heuristics and a self-check list.
 - Use the **book's terminology**: "Pretérito indefinido (perfecto simple)", "Pretérito imperfecto", "Pretérito perfecto (compuesto)". Spanish from Spain: **include vosotros**.
 - Missing accents are shown separately ("accent" verdict) but **count as wrong**, both in mastery and in test scores.
-- **EVERY FORM OF EVERY VERB (key user requirement).** Any verb used anywhere on the platform (now or in future content) must be testable in **all 6 persons × all 5 tenses**. In practice:
+- **EVERY FORM OF EVERY VERB (key user requirement).** Any verb used anywhere on the platform (now or in future content) must be testable in **every person × all 7 tenses** (presente, indefinido, imperfecto, perfecto, estar + gerundio, imperativo afirmativo, imperativo negativo). In practice:
   - Every verb in an exercise hint **must be in `VERBS`** (`content.test.ts` enforces this; `haber` is the only exception).
   - `conjVerbs()` drills **all** `DRILL_VERBS` (not only irregular ones) in every tense topic.
   - Tense-topic practice rounds include 3 **whole-table** exercises (`kind: 'table'`, all persons at once).
-  - After any exercise, the feedback links to **"all forms of X"** (`#/verb/<inf>`: full tables in all 5 tenses).
+  - After any exercise, the feedback links to **"all forms of X"** (`#/verb/<inf>`: full tables in all 7 tenses).
   - Verbs page: coverage colours per form, single/table drill modes, and an "only forms I haven't mastered" filter.
   - Use varied persons in new sentences (tú, nosotros, vosotros, ellos too), not just yo/él.
 - gustar-type verbs (gustar, encantar, doler, molestar, interesar) and llover are `impersonal: true`: excluded from yo/tú drills. gustar-type verbs are practised in all persons via me/te/le/nos/os/les in the gustar topic.
 - Presentation prep was **removed** at the user's request. Don't re-add it.
+- **Imperatives** (★, not on the exam list, but in the booklet): `personsFor(tense)` gives the persons of a tense. imperativo = tú, usted, vosotros, ustedes `[1,2,4,5]` (no nosotros, like the book); imperativo-neg = `[1..5]`. `personLabel(tense, p)` shows usted/ustedes for p2/p5. `conjugate()` returns `''` for persons that don't exist. Always loop over `personsFor(t)`, never over 0..5. Table exercises carry `persons` aligned with `answers`.
 
 ## Commands
 ```bash
@@ -77,6 +78,7 @@ Routing is by hash: `#/topic/<id>`, `#/practice/<id>`, `#/review`, `#/verb/<inf>
 ## Gotchas
 - `progress.ts` uses **local dates** (not UTC) for daily counts and the streak.
 - The practice Enter key: the first Enter checks the answer, and a window listener (attached on the next tick) handles "next". Don't also handle "next" in the input's onKeyDown, or one press will skip twice.
+- Imperative forms come from an internal present subjunctive (yo stem + opposite vowel; nos/vos without boot change, but -ir verbs keep i/u). Irregulars live in `IMPERATIVE_IRREGULAR` in `verbs.ts` (subj / impTu / impVos). Enclitic accents (dúchate, siéntese, váyase) come from `attachPronoun`, a small stress/syllable helper. If a new verb's yo form doesn't end in -o, it needs a `subj` override (the conjugator throws otherwise, and the "every verb conjugates" test catches it).
 - Progress: a `table` result is also recorded per cell as `c:<tense>:<verb>:<person>` (`recordResult`), so coverage and single-form drills share stats.
 - `pickFill` allows at most one story per test section, and only if it is ≤60% of the gaps, so long stories appear in practice only.
 - The verb test date in `pages/Dashboard.tsx` `DATES` is provisional. Update it when the user confirms.

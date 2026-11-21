@@ -77,5 +77,17 @@ export const serEstarHay: Topic = {
     { t: 'choice', text: 'El museo del Prado ___ en Madrid.', options: ['hay', 'está', 'es'], answer: 'está', why: 'specific place → está' },
     { t: 'choice', text: 'El concierto ___ en el estadio.', options: ['hay', 'está', 'es'], answer: 'es', why: 'event → ser' },
     { t: 'choice', text: 'Julián no es guapo, pero hoy ___ muy guapo.', options: ['es', 'está'], answer: 'está', why: 'temporary situation → estar' },
+    // --- from the exercise booklet (Unidades 11, 12)
+    { t: 'fill', text: '¿De dónde [[eres|ser]] (tú)? —[[Soy|ser]] de Cracovia.' },
+    { t: 'fill', text: '¿Cómo [[estás|estar]]? —[[Estoy|estar]] muy bien.' },
+    { t: 'fill', text: 'De pequeño (tú) [[eras|ser]] muy tímido, ¿no?' },
+    { t: 'fill', text: 'Ayer (yo) [[estaba|estar]] muy cansado.' },
+    { t: 'fill', text: '¿Dónde [[estabas|estar]] (tú) a las ocho?' },
+    { t: 'fill', text: 'La fiesta de ayer [[fue|ser]] en casa de Pedro.', why: 'event in the past → fue' },
+    { t: 'fill', text: '¿Cuánto tiempo [[estuviste|estar]] en Japón?' },
+    { t: 'fill', text: '[[Hay|haber]] un supermercado en mi calle. [[Está|estar]] al lado del banco.' },
+    { t: 'fill', text: '¿Dónde [[está|estar]] la estación? —[[Está|estar]] cerca del centro.' },
+    { t: 'fill', text: 'Antes [[había|haber]] un parque aquí; [[estaba|estar]] al lado del río.' },
+    { t: 'fill', text: 'En la fiesta [[había|haber]] mucha gente. Mis amigos [[estaban|estar]] en la terraza.' },
   ],
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Exercise, Verdict } from '../types';
 import { grade, recordResult, topicById, verbOf } from '../engine/session';
+import { personLabel } from '../data/verbs';
 import { AccentBar, Bar } from './common';
 import { ExerciseView } from './ExerciseView';
 
@@ -197,7 +198,7 @@ function MistakeLine({ r }: { r: Result }) {
   if (ex.kind === 'conjugate')
     return (
       <>
-        {ex.verb}, {['yo', 'tú', 'él', 'nosotros', 'vosotros', 'ellos'][ex.person]}: <strong>{ex.answer}</strong>{' '}
+        {ex.verb}, {personLabel(ex.tense, ex.person, true)}: <strong>{ex.answer}</strong>{' '}
         {r.answers[0] && <span className="muted">(you: {r.answers[0]})</span>}
       </>
     );

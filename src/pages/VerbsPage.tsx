@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { Exercise, Tense } from '../types';
-import { conjugate, DRILL_VERBS, getVerb, isIrregular, PERSONS, TENSE_LABEL, VERBS } from '../data/verbs';
+import { conjugate, DRILL_VERBS, getVerb, isIrregular, PERSONS, personsFor, TENSE_LABEL, VERBS } from '../data/verbs';
 import { ALL_TENSES, conjExercise, shuffle, tableExercise, TENSE_TOPIC } from '../engine/session';
 import { getStat } from '../engine/progress';
 import { BackLink } from '../components/common';
 import { Practice } from '../components/Practice';
 
-const TENSES: Tense[] = ['indefinido', 'imperfecto', 'perfecto', 'presente', 'gerundio'];
+const TENSES: Tense[] = ['indefinido', 'imperfecto', 'perfecto', 'presente', 'gerundio', 'imperativo', 'imperativo-neg'];
 const mastered = (tense: Tense, inf: string, p: number) => (getStat(`c:${tense}:${inf}:${p}`)?.box ?? 0) >= 4;
 
 export function VerbsPage() {
@@ -21,19 +21,19 @@ export function VerbsPage() {
   const [session, setSession] = useState<Exercise[] | null>(null);
 
   const build = () => {
-    const persons = vosotros ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 5];
+    const personsOf = (t: Tense) => personsFor(t).filter((p) => vosotros || p !== 4);
     const verbsFor = (t: Tense) => DRILL_VERBS.filter((v) => !onlyIrregular || isIrregular(v, t));
     let pool: Exercise[];
     if (mode === 'table') {
       pool = tenses.flatMap((t) =>
         verbsFor(t)
-          .filter((v) => !onlyWeak || !persons.every((p) => mastered(t, v, p)))
+          .filter((v) => !onlyWeak || !personsOf(t).every((p) => mastered(t, v, p)))
           .map((v) => tableExercise(v, t)),
       );
     } else {
       pool = tenses.flatMap((t) =>
         verbsFor(t).flatMap((v) =>
-          persons.filter((p) => !onlyWeak || !mastered(t, v, p)).map((p) => conjExercise(TENSE_TOPIC[t], v, t, p)),
+          personsOf(t).filter((p) => !onlyWeak || !mastered(t, v, p)).map((p) => conjExercise(TENSE_TOPIC[t], v, t, p)),
         ),
       );
     }
@@ -56,7 +56,8 @@ export function VerbsPage() {
   const q = query.toLowerCase();
   const matches = VERBS.filter((v) => !q || v.inf.includes(q) || v.en.includes(q));
   const v = getVerb(verb);
-  const covered = ALL_TENSES.reduce((n, t) => n + [0, 1, 2, 3, 4, 5].filter((p) => mastered(t, verb, p)).length, 0);
+  const covered = ALL_TENSES.reduce((n, t) => n + personsFor(t).filter((p) => mastered(t, verb, p)).length, 0);
+  const totalForms = ALL_TENSES.reduce((n, t) => n + personsFor(t).length, 0);
 
   return (
     <div className="verbs">
@@ -139,7 +140,7 @@ export function VerbsPage() {
             </a>
           )}
         </div>
-        {!v.impersonal && <p className="muted small">Mastered forms: {covered} / 30</p>}
+        {!v.impersonal && <p className="muted small">Mastered forms: {covered} / {totalForms}</p>}
         <div className="table-wrap">
           <table className="conj">
             <thead>
@@ -160,9 +161,10 @@ export function VerbsPage() {
                   {TENSES.map((t) => {
                     const st = getStat(`c:${t}:${verb}:${i}`);
                     const cls = !st ? '' : st.box >= 4 ? 'cov-ok' : st.box <= 2 ? 'cov-bad' : '';
+                    const form = v.impersonal && i !== 2 ? '' : conjugate(verb, t, i);
                     return (
                       <td key={t} className={cls}>
-                        {v.impersonal && i !== 2 ? '—' : conjugate(verb, t, i)}
+                        {form || <span className="muted">—</span>}
                       </td>
                     );
                   })}
@@ -171,7 +173,10 @@ export function VerbsPage() {
             </tbody>
           </table>
         </div>
-        <p className="muted small">● = irregular in this tense · green = mastered · red = recently wrong</p>
+        <p className="muted small">
+          ● = irregular in this tense · green = mastered · red = recently wrong · imperative rows: tú, <strong>usted</strong> (él row),
+          nosotros, vosotros, <strong>ustedes</strong> (ellos row)
+        </p>
       </div>
     </div>
   );

@@ -24,6 +24,8 @@ export const preposiciones: Topic = {
         ['**para**', 'recipient', 'El regalo es **para** mí.'],
         ['**con / sin**', 'with / without', 'Voy **con** Jorge. Escribo **sin** diccionario.'],
         ['**desde… hasta**', 'from… until / to', 'Trabajo **desde** las 8 **hasta** las 2. (also **de** 8 **a** 2)'],
+        ['**hacia**', 'towards (direction)', 'Caminamos **hacia** la playa.'],
+        ['**entre**', 'between', 'El baño está **entre** las habitaciones.'],
       ],
     },
     {
@@ -89,5 +91,18 @@ export const preposiciones: Topic = {
     { t: 'fill', text: 'Sara García se centró [[en]] la investigación contra el cáncer.' },
     { t: 'fill', text: 'Se alojó [[en]] casa [[de]] una amiga.' },
     { t: 'fill', text: 'El trabajo es [[para]] mañana.', why: 'deadline → para' },
+    // --- from the exercise booklet (Unidad 10)
+    { t: 'fill', text: 'Caminamos [[hacia]] la playa.', why: 'hacia = towards (direction, without a fixed end point)' },
+    { t: 'fill', text: 'El avión va [[hacia]] el norte.' },
+    { t: 'fill', text: 'Trabajo [[desde]] las nueve [[hasta]] las cinco [[de]] la tarde.' },
+    { t: 'fill', text: 'Vamos [[al]] cine y luego volvemos [[del]] centro en metro.', why: 'a + el = al, de + el = del' },
+    { t: 'fill', text: 'Estudio [[en]] la biblioteca [[por]] las tardes.' },
+    { t: 'fill', text: 'Este regalo es [[para]] mi madre; lo compré [[por]] veinte euros.' },
+    { t: 'fill', text: '[[Por]] la mañana voy a clase y [[por]] la tarde trabajo.' },
+    { t: 'fill', text: '[[Para]] mí, el español es fácil.', why: 'para mí = in my opinion' },
+    { t: 'fill', text: 'Salgo [[de]] casa [[a]] las ocho.' },
+    { t: 'fill', text: 'Voy [[a]] Madrid [[en]] tren.' },
+    { t: 'fill', text: 'La reunión es [[de]] diez [[a]] doce.' },
+    { t: 'fill', text: 'Gracias [[por]] venir.' },
   ],
 };

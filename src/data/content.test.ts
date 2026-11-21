@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { TOPICS } from './topics';
 import { blanksOf } from '../engine/check';
-import { conjugate, VERBS } from './verbs';
+import { conjugate, personsFor, VERBS } from './verbs';
 import type { Tense } from '../types';
 
 const known = new Set(VERBS.map((v) => v.inf));
@@ -9,6 +9,8 @@ const known = new Set(VERBS.map((v) => v.inf));
 const EXCEPTIONS = new Set(['haber']);
 const ESTAR_IMP = ['estaba', 'estabas', 'estaba', 'estábamos', 'estabais', 'estaban'];
 const ESTAR_PRES = ['estoy', 'estás', 'está', 'estamos', 'estáis', 'están'];
+const ESTAR_IND = ['estuve', 'estuviste', 'estuvo', 'estuvimos', 'estuvisteis', 'estuvieron'];
+const ESTAR_PERF = ['he estado', 'has estado', 'ha estado', 'hemos estado', 'habéis estado', 'han estado'];
 const TENSES: Record<string, Tense[]> = {
   indefinido: ['indefinido'],
   imperfecto: ['imperfecto'],
@@ -17,6 +19,8 @@ const TENSES: Record<string, Tense[]> = {
   'contraste-ind-perf': ['indefinido', 'perfecto'],
   presente: ['presente'],
   gerundio: ['gerundio'],
+  imperativo: ['imperativo'],
+  'imperativo-neg': ['imperativo-neg'],
 };
 
 describe('content', () => {
@@ -50,12 +54,13 @@ describe('content', () => {
           if (it.t !== 'fill') continue;
           for (const b of blanksOf(it.text)) {
             if (!b.hint || !known.has(b.hint)) continue;
-            const forms = tenses.flatMap((t) => [0, 1, 2, 3, 4, 5].map((p) => conjugate(b.hint!, t, p)));
+            const forms = tenses.flatMap((t) => personsFor(t).map((p) => conjugate(b.hint!, t, p)));
+            if (tenses.includes('imperativo-neg')) forms.push(...forms.map((f) => f.replace(/^no /, '')));
             // estar + gerundio also exists in the past: estaba cenando
             if (tenses.includes('gerundio'))
-              forms.push(
-                ...forms.map((f) => f.split(' ').map((w) => (ESTAR_PRES.includes(w) ? ESTAR_IMP[ESTAR_PRES.indexOf(w)] : w)).join(' ')),
-              );
+              // estar + gerundio also exists in the past: estaba / estuve / he estado cenando
+              for (const alt of [ESTAR_IMP, ESTAR_IND, ESTAR_PERF])
+                forms.push(...forms.map((f) => f.split(' ').map((w) => (ESTAR_PRES.includes(w) ? alt[ESTAR_PRES.indexOf(w)] : w)).join(' ')));
             // at least one accepted answer must be a real form (others may be variants like "está duchándose")
             if (!b.answers.some((a) => forms.includes(a.toLowerCase()))) bad.push(`${b.answers.join('/')} (${b.hint}) in "${it.text}"`);
           }

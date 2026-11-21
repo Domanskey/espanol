@@ -1,5 +1,5 @@
 import type { Block, Tense } from '../types';
-import { conjugate, PERSONS, TENSE_LABEL } from '../data/verbs';
+import { conjugate, personLabel, personsFor, TENSE_LABEL } from '../data/verbs';
 import { Rich } from './common';
 
 export function Theory({ blocks }: { blocks: Block[] }) {
@@ -81,11 +81,11 @@ export function ConjTable({ tense, verbs }: { tense: Tense; verbs: string[] }) {
           </tr>
         </thead>
         <tbody>
-          {PERSONS.map((p, i) => (
+          {personsFor(tense).map((p) => (
             <tr key={p}>
-              <td className="muted">{p}</td>
+              <td className="muted">{personLabel(tense, p)}</td>
               {verbs.map((v) => (
-                <td key={v}>{conjugate(v, tense, i)}</td>
+                <td key={v}>{conjugate(v, tense, p)}</td>
               ))}
             </tr>
           ))}

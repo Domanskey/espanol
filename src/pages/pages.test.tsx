@@ -27,12 +27,17 @@ describe('pages render without crashing', () => {
       renderToString(<ExerciseView ex={e} answers={[]} onChange={() => {}} verdicts={null} />);
     }
   });
-  it('every drillable verb has a full table in all 5 tenses, and it renders', () => {
+  it('every drillable verb has a full table in all 7 tenses, and it renders', () => {
     expect(DRILL_VERBS.length).toBeGreaterThan(100);
     for (const inf of DRILL_VERBS) {
       const tables = verbSession(inf);
-      expect(tables.length, inf).toBe(5);
-      for (const t of tables) if (t.kind === 'table') expect(t.answers.length).toBe(6);
+      expect(tables.length, inf).toBe(7);
+      for (const t of tables)
+        if (t.kind === 'table') {
+          expect(t.answers.length).toBe(t.persons.length);
+          expect(t.persons.length).toBe(t.tense === 'imperativo' ? 4 : t.tense === 'imperativo-neg' ? 5 : 6);
+          expect(t.answers.every((a) => a.length > 0), `${inf} ${t.tense}`).toBe(true);
+        }
     }
     const salir = verbSession('salir');
     expect(renderToString(<ExerciseView ex={salir[0]} answers={[]} onChange={() => {}} verdicts={null} />)).toContain('salir');

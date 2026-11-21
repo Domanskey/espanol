@@ -11,7 +11,23 @@ export const TENSE_LABEL: Record<Tense, string> = {
   imperfecto: 'Pret. imperfecto',
   perfecto: 'Pret. perfecto (compuesto)',
   gerundio: 'Estar + gerundio',
+  imperativo: 'Imperativo afirmativo',
+  'imperativo-neg': 'Imperativo negativo',
 };
+
+/** Which persons exist in a tense. Imperatives have no yo; the affirmative skips nosotros (like the book). */
+export function personsFor(tense: Tense): number[] {
+  if (tense === 'imperativo') return [1, 2, 4, 5];
+  if (tense === 'imperativo-neg') return [1, 2, 3, 4, 5];
+  return [0, 1, 2, 3, 4, 5];
+}
+
+const IMP_LABEL = ['', 'tú', 'usted', 'nosotros/as', 'vosotros/as', 'ustedes'];
+const IMP_SHORT = ['', 'tú', 'usted', 'nosotros', 'vosotros', 'ustedes'];
+export function personLabel(tense: Tense, p: number, short = false): string {
+  if (tense === 'imperativo' || tense === 'imperativo-neg') return (short ? IMP_SHORT : IMP_LABEL)[p];
+  return (short ? PERSONS_SHORT : PERSONS)[p];
+}
 
 type Six = [string, string, string, string, string, string];
 
@@ -27,6 +43,12 @@ export interface Verb {
   ger?: string;
   /** only used in the 3rd person (llover): excluded from person drills */
   impersonal?: true;
+  /** present subjunctive (for usted/ustedes and the negative imperative), when not derivable */
+  subj?: Six;
+  /** irregular tú imperative (haz, ten, ve…) without pronoun */
+  impTu?: string;
+  /** irregular vosotros imperative, complete (idos) */
+  impVos?: string;
 }
 
 export const VERBS: Verb[] = [
@@ -328,7 +350,140 @@ export const VERBS: Verb[] = [
     part: 'sonreído',
     ger: 'sonriendo',
   },
+
+  // ---- added from the exercise booklet answer key (librito.pdf, Unidades 1–19)
+  { inf: 'reservar', en: 'to book' },
+  { inf: 'alquilar', en: 'to rent' },
+  { inf: 'cobrar', en: 'to charge / to get paid' },
+  { inf: 'arreglar', en: 'to fix / to tidy' },
+  { inf: 'tardar', en: 'to take (time) / to be late' },
+  { inf: 'esperar', en: 'to wait / to hope' },
+  { inf: 'ordenar', en: 'to tidy up' },
+  { inf: 'limpiar', en: 'to clean' },
+  { inf: 'intentar', en: 'to try' },
+  { inf: 'organizar', en: 'to organise' },
+  { inf: 'desarrollar', en: 'to develop' },
+  { inf: 'investigar', en: 'to research' },
+  { inf: 'expulsar', en: 'to expel' },
+  { inf: 'copiar', en: 'to copy' },
+  { inf: 'ayudar', en: 'to help' },
+  { inf: 'crear', en: 'to create' },
+  { inf: 'entrar', en: 'to enter' },
+  { inf: 'durar', en: 'to last' },
+  { inf: 'dejar', en: 'to leave / to let' },
+  { inf: 'bajar', en: 'to go down' },
+  { inf: 'olvidar', en: 'to forget' },
+  { inf: 'usar', en: 'to use' },
+  { inf: 'respirar', en: 'to breathe' },
+  { inf: 'tirar', en: 'to throw (away)' },
+  { inf: 'acabar', en: 'to finish' },
+  { inf: 'chocar', en: 'to crash / to bump into' },
+  { inf: 'resbalar', en: 'to slip' },
+  { inf: 'picar', en: 'to sting / to bite' },
+  { inf: 'contratar', en: 'to hire' },
+  { inf: 'marcar', en: 'to score / to mark' },
+  { inf: 'cambiar', en: 'to change' },
+  { inf: 'fumar', en: 'to smoke' },
+  { inf: 'costar', en: 'to cost', pres: { change: 'ue' } },
+  { inf: 'conocerse', en: 'to meet (each other)', pres: { yo: 'conozco' } },
+  {
+    inf: 'caer',
+    en: 'to fall (caer bien = to like someone)',
+    pres: { yo: 'caigo' },
+    pret: { full: ['caí', 'caíste', 'cayó', 'caímos', 'caísteis', 'cayeron'] },
+    part: 'caído',
+    ger: 'cayendo',
+  },
+  { inf: 'saludarse', en: 'to greet each other' },
+  { inf: 'necesitar', en: 'to need' },
+  { inf: 'deber', en: 'must / to owe' },
+  { inf: 'preocuparse', en: 'to worry' },
+  { inf: 'cruzar', en: 'to cross' },
+  { inf: 'volar', en: 'to fly', pres: { change: 'ue' } },
+  { inf: 'enviar', en: 'to send', pres: { full: ['envío', 'envías', 'envía', 'enviamos', 'enviáis', 'envían'] } },
+  { inf: 'continuar', en: 'to continue', pres: { full: ['continúo', 'continúas', 'continúa', 'continuamos', 'continuáis', 'continúan'] } },
+  { inf: 'arreglarse', en: 'to get ready' },
+  { inf: 'afeitarse', en: 'to shave' },
+  { inf: 'maquillarse', en: 'to put on make-up' },
+  { inf: 'prepararse', en: 'to get ready / to prepare oneself' },
+  { inf: 'tumbarse', en: 'to lie down' },
+  { inf: 'enfadarse', en: 'to get angry' },
+  { inf: 'asustarse', en: 'to get scared' },
+  { inf: 'equivocarse', en: 'to make a mistake' },
+  { inf: 'apuntarse', en: 'to sign up' },
+  { inf: 'licenciarse', en: 'to get a degree' },
+  { inf: 'jubilarse', en: 'to retire' },
+  { inf: 'trasladarse', en: 'to move (to another place)' },
+  { inf: 'concentrarse', en: 'to concentrate' },
+  { inf: 'sacarse', en: 'to get (a licence, a degree)' },
+  { inf: 'quemarse', en: 'to burn oneself' },
+  { inf: 'llevarse', en: 'to take (with you)' },
+  { inf: 'acordarse', en: 'to remember', pres: { change: 'ue' } },
+  { inf: 'moverse', en: 'to move (oneself)', pres: { change: 'ue' } },
+  { inf: 'toser', en: 'to cough' },
+  { inf: 'meter', en: 'to put in' },
+  { inf: 'atender', en: 'to attend to / to serve', pres: { change: 'ie' } },
+  { inf: 'soler', en: 'to usually do', pres: { change: 'ue' } },
+  { inf: 'caber', en: 'to fit', pres: { yo: 'quepo' }, pret: { strong: 'cup' } },
+  {
+    inf: 'mantener',
+    en: 'to keep / to maintain',
+    pres: { full: ['mantengo', 'mantienes', 'mantiene', 'mantenemos', 'mantenéis', 'mantienen'] },
+    pret: { strong: 'mantuv' },
+  },
+  { inf: 'parecerse', en: 'to look like', pres: { yo: 'parezco' } },
+  { inf: 'discutir', en: 'to argue / to discuss' },
+  { inf: 'imprimir', en: 'to print' },
+  { inf: 'mentir', en: 'to lie', pres: { change: 'ie' }, pret: { change: 'i' } },
+  { inf: 'corregir', en: 'to correct', pres: { change: 'i', yo: 'corrijo' }, pret: { change: 'i' } },
+  { inf: 'producir', en: 'to produce', pres: { yo: 'produzco' }, pret: { strong: 'produj' } },
+  { inf: 'reducir', en: 'to reduce', pres: { yo: 'reduzco' }, pret: { strong: 'reduj' } },
+  {
+    inf: 'construir',
+    en: 'to build',
+    pres: { full: ['construyo', 'construyes', 'construye', 'construimos', 'construís', 'construyen'] },
+    pret: { full: ['construí', 'construiste', 'construyó', 'construimos', 'construisteis', 'construyeron'] },
+    ger: 'construyendo',
+  },
+  {
+    inf: 'destruir',
+    en: 'to destroy',
+    pres: { full: ['destruyo', 'destruyes', 'destruye', 'destruimos', 'destruís', 'destruyen'] },
+    pret: { full: ['destruí', 'destruiste', 'destruyó', 'destruimos', 'destruisteis', 'destruyeron'] },
+    ger: 'destruyendo',
+  },
+  { inf: 'nevar', en: 'to snow', pres: { change: 'ie' }, impersonal: true },
+  { inf: 'apetecer', en: 'to feel like (me apetece)', pres: { yo: 'apetezco' }, impersonal: true },
+  { inf: 'importar', en: 'to matter (me importa)', impersonal: true },
 ];
+
+/** Imperative / present-subjunctive irregularities (kept together so they're easy to check against the book) */
+const IMPERATIVE_IRREGULAR: Record<string, Pick<Verb, 'subj' | 'impTu' | 'impVos'>> = {
+  ser: { subj: ['sea', 'seas', 'sea', 'seamos', 'seáis', 'sean'], impTu: 'sé' },
+  ir: { subj: ['vaya', 'vayas', 'vaya', 'vayamos', 'vayáis', 'vayan'], impTu: 've' },
+  irse: { subj: ['vaya', 'vayas', 'vaya', 'vayamos', 'vayáis', 'vayan'], impTu: 've', impVos: 'idos' },
+  saber: { subj: ['sepa', 'sepas', 'sepa', 'sepamos', 'sepáis', 'sepan'] },
+  estar: { subj: ['esté', 'estés', 'esté', 'estemos', 'estéis', 'estén'] },
+  dar: { subj: ['dé', 'des', 'dé', 'demos', 'deis', 'den'] },
+  jugar: { subj: ['juegue', 'juegues', 'juegue', 'juguemos', 'juguéis', 'jueguen'] },
+  oler: { subj: ['huela', 'huelas', 'huela', 'olamos', 'oláis', 'huelan'] },
+  actuar: { subj: ['actúe', 'actúes', 'actúe', 'actuemos', 'actuéis', 'actúen'] },
+  continuar: { subj: ['continúe', 'continúes', 'continúe', 'continuemos', 'continuéis', 'continúen'] },
+  graduarse: { subj: ['gradúe', 'gradúes', 'gradúe', 'graduemos', 'graduéis', 'gradúen'] },
+  enviar: { subj: ['envíe', 'envíes', 'envíe', 'enviemos', 'enviéis', 'envíen'] },
+  prohibir: { subj: ['prohíba', 'prohíbas', 'prohíba', 'prohibamos', 'prohibáis', 'prohíban'] },
+  reírse: { subj: ['ría', 'rías', 'ría', 'riamos', 'riáis', 'rían'] },
+  sonreír: { subj: ['sonría', 'sonrías', 'sonría', 'sonriamos', 'sonriáis', 'sonrían'] },
+  decir: { impTu: 'di' },
+  hacer: { impTu: 'haz' },
+  poner: { impTu: 'pon' },
+  ponerse: { impTu: 'pon' },
+  salir: { impTu: 'sal' },
+  tener: { impTu: 'ten' },
+  venir: { impTu: 'ven' },
+  mantener: { impTu: 'mantén' },
+};
+for (const v of VERBS) Object.assign(v, IMPERATIVE_IRREGULAR[v.inf]);
 
 const BY_INF = new Map(VERBS.map((v) => [v.inf, v]));
 export const hasVerb = (inf: string) => BY_INF.has(inf);
@@ -418,10 +573,99 @@ export function gerund(v: Verb): string {
   return s + (group(v) === 'ar' ? 'ando' : 'iendo');
 }
 
+// ---------- present subjunctive + imperative
+const SUBJ_END = {
+  ar: ['e', 'es', 'e', 'emos', 'éis', 'en'],
+  er: ['a', 'as', 'a', 'amos', 'áis', 'an'],
+  ir: ['a', 'as', 'a', 'amos', 'áis', 'an'],
+};
+
+/** -car → qu, -gar → gu, -zar → c before e */
+function spellBeforeE(s: string): string {
+  if (s.endsWith('c')) return s.slice(0, -1) + 'qu';
+  if (s.endsWith('g')) return s + 'u';
+  if (s.endsWith('z')) return s.slice(0, -1) + 'c';
+  return s;
+}
+
+function subjunctive(v: Verb, p: number): string {
+  if (v.subj) return v.subj[p];
+  const g = group(v);
+  const yo = presente(v, 0);
+  let s: string;
+  if (v.pres?.full || v.pres?.yo) {
+    // the yo stem is used in every person: tengo → tenga, tengamos; hago → hagamos; sigo → sigamos
+    if (!yo.endsWith('o')) throw new Error(`subjunctive override needed for ${v.inf}`);
+    s = yo.slice(0, -1);
+  } else if (v.pres?.change && (p === 3 || p === 4)) {
+    // nosotros/vosotros: no boot change, but -ir verbs keep i/u: pidamos, durmamos, sintamos
+    s = v.pret?.change ? changeStem(stem(v), v.pret.change) : stem(v);
+  } else {
+    s = yo.slice(0, -1);
+  }
+  if (g === 'ar') s = spellBeforeE(s);
+  return s + SUBJ_END[g][p];
+}
+
+const VOWELS = 'aeiouáéíóúü';
+const STRONG = 'aeoáéóíú';
+const ACCENT: Record<string, string> = { a: 'á', e: 'é', i: 'í', o: 'ó', u: 'ú' };
+
+/** Vowel nuclei (syllable cores) as [start, end] index pairs */
+function nuclei(w: string): [number, number][] {
+  const out: [number, number][] = [];
+  for (let i = 0; i < w.length; i++) {
+    const c = w[i];
+    const silentU = c === 'u' && i > 0 && 'qg'.includes(w[i - 1]) && 'eiéí'.includes(w[i + 1] ?? '');
+    if (!VOWELS.includes(c) || silentU) continue;
+    const last = out[out.length - 1];
+    const joins = last && last[1] === i - 1 && !(STRONG.includes(w[i - 1]) && STRONG.includes(c));
+    if (joins) last[1] = i;
+    else out.push([i, i]);
+  }
+  return out;
+}
+
+/** Attach an enclitic pronoun and add the written accent if the stress moves to the 3rd syllable from the end */
+export function attachPronoun(word: string, pron: string): string {
+  const full = word + pron;
+  if (/[áéíóú]/.test(word)) return full;
+  const nuc = nuclei(word);
+  const si = nuc.length === 1 ? 0 : /[aeiouns]$/.test(word) ? nuc.length - 2 : nuc.length - 1;
+  if (nuclei(full).length - 1 - si < 2) return full;
+  const [a, b] = nuc[si];
+  let idx = b;
+  for (let k = a; k <= b; k++) if ('aeo'.includes(word[k])) idx = k;
+  return full.slice(0, idx) + ACCENT[full[idx]] + full.slice(idx + 1);
+}
+
+function imperativo(v: Verb, p: number): string {
+  const refl = isReflexive(v);
+  if (p === 1) {
+    const tu = v.impTu ?? presente(v, 2);
+    return refl ? attachPronoun(tu, 'te') : tu;
+  }
+  if (p === 4) {
+    if (v.impVos) return v.impVos;
+    const base = baseInf(v).slice(0, -1); // habla, come, vivi, reí
+    if (!refl) return base + 'd';
+    return (base.endsWith('i') ? base.slice(0, -1) + 'í' : base) + 'os'; // duchaos, poneos, vestíos, reíos
+  }
+  const form = subjunctive(v, p); // usted (2), ustedes (5)
+  return refl ? attachPronoun(form, 'se') : form;
+}
+
+function imperativoNeg(v: Verb, p: number): string {
+  return 'no ' + (isReflexive(v) ? REFLEXIVE[p] + ' ' : '') + subjunctive(v, p);
+}
+
 const ESTAR = ['estoy', 'estás', 'está', 'estamos', 'estáis', 'están'];
 
 export function conjugate(inf: string, tense: Tense, p: number): string {
   const v = getVerb(inf);
+  if (!personsFor(tense).includes(p)) return '';
+  if (tense === 'imperativo') return imperativo(v, p);
+  if (tense === 'imperativo-neg') return imperativoNeg(v, p);
   const refl = isReflexive(v) ? REFLEXIVE[p] + ' ' : '';
   switch (tense) {
     case 'presente':
@@ -451,12 +695,18 @@ export function isIrregular(inf: string, tense: Tense): boolean {
       return !!v.part;
     case 'gerundio':
       return !!v.ger || !!v.pret?.change;
+    case 'imperativo':
+      return !!v.impTu || !!v.impVos || !!v.subj || !!v.pres;
+    case 'imperativo-neg':
+      return !!v.subj || !!v.pres || /(car|gar|zar)(se)?$/.test(v.inf);
   }
 }
 
 /** All accepted answers for a form: reflexive gerunds also allow the attached pronoun (estoy duchándome) */
 export function acceptedForms(inf: string, tense: Tense, p: number): string[] {
   const main = conjugate(inf, tense, p);
+  if (tense === 'imperativo-neg') return [main, main.replace(/^no /, '')];
+  if (tense === 'imperativo' && inf === 'irse' && p === 4) return [main, 'iros'];
   if (tense !== 'gerundio' || !isReflexive(getVerb(inf))) return [main];
   const [pron, estar, ger] = main.split(' ');
   const accented = ger.replace(/([ae])ndo$/, (_, v: string) => (v === 'a' ? 'á' : 'é') + 'ndo');

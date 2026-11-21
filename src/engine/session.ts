@@ -1,6 +1,6 @@
 import type { Exercise, Tense, Topic, Verdict } from '../types';
 import { TOPICS } from '../data/topics';
-import { acceptedForms, conjugate, DRILL_VERBS, getVerb, hasVerb } from '../data/verbs';
+import { acceptedForms, conjugate, DRILL_VERBS, getVerb, hasVerb, personsFor } from '../data/verbs';
 import { blanksOf, check } from './check';
 import { allStats, isDue, itemScore, record } from './progress';
 
@@ -33,8 +33,10 @@ export const TENSE_TOPIC: Record<Tense, string> = {
   perfecto: 'perfecto',
   presente: 'presente',
   gerundio: 'gerundio',
+  imperativo: 'imperativo',
+  'imperativo-neg': 'imperativo-neg',
 };
-export const ALL_TENSES: Tense[] = ['presente', 'indefinido', 'imperfecto', 'perfecto', 'gerundio'];
+export const ALL_TENSES: Tense[] = ['presente', 'indefinido', 'imperfecto', 'perfecto', 'gerundio', 'imperativo', 'imperativo-neg'];
 
 export function tableExercise(inf: string, tense: Tense, topicId = TENSE_TOPIC[tense]): Exercise {
   return {
@@ -44,7 +46,8 @@ export function tableExercise(inf: string, tense: Tense, topicId = TENSE_TOPIC[t
     verb: inf,
     en: getVerb(inf).en,
     tense,
-    answers: [0, 1, 2, 3, 4, 5].map((p) => conjugate(inf, tense, p)),
+    persons: personsFor(tense),
+    answers: personsFor(tense).map((p) => conjugate(inf, tense, p)),
   };
 }
 
@@ -78,7 +81,7 @@ export function verbOf(ex: Exercise): string | undefined {
 /** Save the result; tables also count for each single form (c:tense:verb:person) */
 export function recordResult(ex: Exercise, verdicts: Verdict[]) {
   record(ex.id, verdicts.every((v) => v === 'ok'));
-  if (ex.kind === 'table') verdicts.forEach((v, p) => record(`c:${ex.tense}:${ex.verb}:${p}`, v === 'ok', false));
+  if (ex.kind === 'table') verdicts.forEach((v, i) => record(`c:${ex.tense}:${ex.verb}:${ex.persons[i]}`, v === 'ok', false));
 }
 
 export function conjExercise(topicId: string, inf: string, tense: Tense, person: number): Exercise {
@@ -100,7 +103,7 @@ export function conjExercises(topic: Topic): Exercise[] {
   let list = conjCache.get(topic.id);
   if (!list) {
     list = conjVerbs(topic).flatMap((inf) =>
-      [0, 1, 2, 3, 4, 5].map((p) => conjExercise(topic.id, inf, topic.conj!.tense, p)),
+      personsFor(topic.conj!.tense).map((p) => conjExercise(topic.id, inf, topic.conj!.tense, p)),
     );
     conjCache.set(topic.id, list);
   }
@@ -206,7 +209,7 @@ export function grade(ex: Exercise, answers: string[]): Verdict[] {
     case 'conjugate':
       return [check(answers[0] ?? '', acceptedForms(ex.verb, ex.tense, ex.person), { allowSubject: true })];
     case 'table':
-      return ex.answers.map((_, i) => check(answers[i] ?? '', acceptedForms(ex.verb, ex.tense, i), { allowSubject: true }));
+      return ex.persons.map((p, i) => check(answers[i] ?? '', acceptedForms(ex.verb, ex.tense, p), { allowSubject: true }));
     case 'choice':
       return [answers[0] === ex.answer ? 'ok' : 'wrong'];
     case 'fill':
@@ -215,7 +218,7 @@ export function grade(ex: Exercise, answers: string[]): Verdict[] {
 }
 
 export function blankCount(ex: Exercise): number {
-  if (ex.kind === 'table') return 6;
+  if (ex.kind === 'table') return ex.persons.length;
   return ex.kind === 'fill' ? blanksOf(ex.text).length : 1;
 }
 

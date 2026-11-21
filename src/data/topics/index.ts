@@ -9,6 +9,9 @@ import { preposiciones } from './preposiciones';
 import { serEstarHay } from './ser-estar-hay';
 import { presente, gerundio, gustar, conectores, basicos } from './repaso';
 import { interrogativos } from './interrogativos';
+import { imperativo, imperativoNeg } from './imperativo';
+import { errores } from './errores';
+import { obligacion, reflexivos } from './obligacion-reflexivos';
 
 /** Ordered by priority for the exams */
 export const TOPICS: Topic[] = [
@@ -20,10 +23,15 @@ export const TOPICS: Topic[] = [
   pronombres,
   preposiciones,
   serEstarHay,
+  errores,
   presente,
   gerundio,
   gustar,
   conectores,
   basicos,
   interrogativos,
+  reflexivos,
+  obligacion,
+  imperativo,
+  imperativoNeg,
 ];

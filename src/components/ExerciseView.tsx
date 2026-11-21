@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { Exercise, Verdict } from '../types';
 import { parseFill } from '../engine/check';
-import { PERSONS, TENSE_LABEL } from '../data/verbs';
+import { personLabel, TENSE_LABEL } from '../data/verbs';
 import { Rich } from './common';
 
 interface Props {
@@ -67,7 +67,7 @@ export function ExerciseView({ ex, answers, onChange, verdicts, onSubmit, autoFo
             {ex.verb} <span className="muted">({ex.en})</span>
           </div>
           <div className="conj-person">
-            {PERSONS[ex.person]} {input(0, 14, 'answer')}
+            {personLabel(ex.tense, ex.person)} {input(0, 14, 'answer')}
           </div>
         </div>
         {graded && !hideSolution && <Solution verdicts={verdicts!} solution={ex.answer} />}
@@ -83,15 +83,15 @@ export function ExerciseView({ ex, answers, onChange, verdicts, onSubmit, autoFo
           <div className="conj-verb">
             {ex.verb} <span className="muted">({ex.en})</span>
           </div>
-          <p className="muted small">Fill in all six forms.</p>
+          <p className="muted small">Fill in all {ex.persons.length} forms.</p>
         </div>
         <table className="table-ex">
           <tbody>
-            {PERSONS.map((p, i) => (
+            {ex.persons.map((p, i) => (
               <tr key={p}>
-                <td className="muted">{p}</td>
+                <td className="muted">{personLabel(ex.tense, p)}</td>
                 <td>
-                  {input(i, 18, p)}
+                  {input(i, 18, personLabel(ex.tense, p))}
                   {graded && verdicts![i] !== 'ok' && !hideSolution && <span className="correction">{ex.answers[i]}</span>}
                 </td>
               </tr>
